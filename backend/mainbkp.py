@@ -1,9 +1,12 @@
 from tapo import ApiClient
 from dotenv import load_dotenv
 from sunlike import Sunlike, get_device
-import websocket
+from api import SunlikeAPI
 
 import asyncio, os, threading
+
+
+        
         
 
 def start_asyncio_sunlike_loop(loop, task):
@@ -17,7 +20,7 @@ async def main():
         os.getenv("TAPO_PASSWORD"))
     device = await get_device(client)
     sunlike = Sunlike(device, client)
-    
+    sunlike_api = SunlikeAPI(sunlike)
     
     await sunlike.sync_config()
     
@@ -29,8 +32,24 @@ async def main():
     asyncio.set_event_loop(sunlike_loop)
     
     threading.Thread(target=start_asyncio_sunlike_loop, args=(sunlike_loop, sunlike.main_loop,), daemon=True).start()
-    await websocket.start_socket(sunlike)
     
+    sunlike_api.run()
+    
+    # Syncs the actual values on the bulb to the class attributes
+    
+    #await sunlike.set_as_defaults()
+
+    # await sunlike.device.set().brightness(75).color_temperature(2500).send(sunlike.device)
+    # time.sleep(3)
+    # await sunlike.device.on()
+
+    
+    #time.sleep(10)
+    #await sunlike.linear_gradient_set_config(time_m=0.3, end_brightness=1)
+    #await sunlike.device.off()
+    
+    
+    # TODO: use asyncio.gather instead of the .set() stuff, can then use the sunlike methods
     
     
         

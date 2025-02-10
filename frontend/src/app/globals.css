@@ -1,0 +1,38 @@
+:root, *{
+	background: #181a1b;
+	color: #e7e5e4;
+}
+
+.control-panel {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.control-panel div {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+
+.brightness-slider {
+	width: 100%;
+	height: 25px;
+	background-color: #181a1b;
+}
+
+/* Firefox Support */
+.brightness-slider::-moz-range-track {
+	height: 25px;
+	background: rgba(200, 150, 0, 0.8);
+	border-radius: 5px;
+}
+
+.brightness-slider::-moz-range-thumb {
+	width: 4px;
+	height: 25px;
+	background: #000;
+	cursor: pointer;
+	border: none;
+}
