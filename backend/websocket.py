@@ -15,8 +15,12 @@ async def handle(path: str, data: str, websocket: websockets.WebSocketClientProt
         config = await sunlike.get_current_config()
         await websocket.send(f"inform-brightness/{config['brightness']}")
         await websocket.send(f"inform-power-state/{'on' if config['device_on'] else 'off'}")
+        
+    elif path == "config-inform":
+        config = sunlike.config_manager.get_config()
+        await websocket.send(f"inform-sunrise-time/{config["sunrise_time"]}")
     
-    if path == "set-brightness":
+    elif path == "set-brightness":
         # TODO: validation, 1-100
         await sunlike.set_config(brightness=int(data))
     

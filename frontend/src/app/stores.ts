@@ -8,7 +8,12 @@ interface BrightnessState {
 type PowerState = "on" | "off"
 interface PowerStateState {
 	powerState: PowerState;
-	setPowerState: (powerState: PowerState) => void;
+	setPowerState: (value: PowerState) => void;
+}
+
+interface SunriseTimeState {
+	sunriseTime: [number, number];
+	setSunriseTime: (value: [number, number]) => void;
 }
 
 export const brightnessStore = create<BrightnessState>(set => ({
@@ -24,3 +29,10 @@ export const powerStateStore = create<PowerStateState>(set => ({
 }))
 export const getPowerState = () => powerStateStore.getState().powerState
 export const setPowerState = (value: PowerState) => powerStateStore.getState().setPowerState(value)
+
+export const sunriseTimeStore = create<SunriseTimeState>(set => ({
+	sunriseTime: [-1, -1],
+	setSunriseTime: (value: [number, number]) => set({ sunriseTime: value })
+}))
+export const getSunriseTime = () => sunriseTimeStore.getState().sunriseTime
+export const setSunriseTime = (value: [number, number]) => sunriseTimeStore.getState().setSunriseTime(value)

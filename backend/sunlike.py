@@ -1,4 +1,5 @@
 from tapo import ColorLightHandler, ApiClient
+from config_manager import ConfigManager
 
 import asyncio, time, math, threading, time, datetime, os, websockets
 
@@ -28,8 +29,9 @@ def thread_target(loop, function):
     loop.run_until_complete(function())
 
 class Sunlike(object):
-    def __init__(self, device: ColorLightHandler, client: ApiClient):
+    def __init__(self, device: ColorLightHandler, client: ApiClient, config_manager: ConfigManager):
         self.websocket: websockets.WebSocketServerProtocol = None
+        self.config_manager = config_manager
         self.client = client
         self.device = device
         self.version = "Sunlike 0.0.4a"

@@ -5,6 +5,7 @@ import BrightnessControls from "./components/BrightnessControls";
 import DuskfallButton from "./components/DuskfallButton";
 import PowerButton from "./components/PowerButton";
 import SocketHandler from "./lib/socketHandler";
+import SunriseControls from "./components/SunriseControls";
 
 export const SocketContext = createContext<RefObject<SocketHandler | null> | null>(null)
 const createSocket = () => new WebSocket("ws://192.168.1.105:5021")
@@ -34,6 +35,7 @@ export default function Page() {
 				<PowerButton />
 				<BrightnessControls />
 				<DuskfallButton />
+				<SunriseControls />
 			</SocketContext.Provider>
 		</main>
 	)
