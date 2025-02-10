@@ -18,7 +18,7 @@ async def handle(path: str, data: str, websocket: websockets.WebSocketClientProt
         
     elif path == "config-inform":
         config = sunlike.config_manager.get_config()
-        await websocket.send(f"inform-sunrise-time/{config["sunrise_time"]}")
+        await websocket.send(f"inform-sunrise-time/{config['sunrise_time']}")
     
     elif path == "set-brightness":
         # TODO: validation, 1-100
