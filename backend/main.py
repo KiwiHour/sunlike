@@ -1,6 +1,7 @@
 from tapo import ApiClient
 from dotenv import load_dotenv
 from sunlike import Sunlike, get_device
+from config_manager import ConfigManager
 import websocket
 
 import asyncio, os, threading
@@ -12,11 +13,12 @@ def start_asyncio_sunlike_loop(loop, task):
 
 async def main():
     load_dotenv()
+    config_manager = ConfigManager("sunlike.config")
     client = ApiClient(
         os.getenv("TAPO_USERNAME"),
         os.getenv("TAPO_PASSWORD"))
     device = await get_device(client)
-    sunlike = Sunlike(device, client)
+    sunlike = Sunlike(device, client, config_manager)
     
     
     await sunlike.sync_config()
