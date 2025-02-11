@@ -212,9 +212,10 @@ class Sunlike(object):
             await self.websocket.send(f"inform-brightness/{config['brightness']}")
             await self.websocket.send(f"inform-power-state/{'on' if config['device_on'] else 'off'}")
         
-        except websockets.exceptions.ConnectionClosedError:
+        except websockets.exceptions.ConnectionClosedError as err:
             # If no websocket connected, then just ignore
             print("Errorful websocket closure")
+            print(err)
             return
         except websockets.exceptions.ConnectionClosed:
             return
