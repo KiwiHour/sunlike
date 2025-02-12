@@ -13,7 +13,7 @@ def start_asyncio_sunlike_loop(loop, task):
 
 async def main():
     load_dotenv()
-    config_manager = ConfigManager("sunlike.config")
+    config_manager = ConfigManager(os.path.join(os.path.dirname(__file__), "sunlike.config"))
     client = ApiClient(
         os.getenv("TAPO_USERNAME"),
         os.getenv("TAPO_PASSWORD"))
