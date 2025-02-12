@@ -22,7 +22,7 @@ async def handle(path: str, data: str, websocket: websockets.WebSocketClientProt
     
     elif path == "set-brightness":
         # TODO: validation, 1-100
-        await sunlike.set_config(brightness=int(data))
+        await sunlike.set_config(brightness=int(data), ws_inform=False)
     
     elif path == "set-power-state":
         if data == "on":

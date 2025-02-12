@@ -222,7 +222,7 @@ class Sunlike(object):
         except websockets.exceptions.ConnectionClosedOK:
             return
 
-    async def set_config(self, brightness: float = None, color_temp: float = None, hue: float = None, saturation: float = None):
+    async def set_config(self, brightness: float = None, color_temp: float = None, hue: float = None, saturation: float = None, ws_inform = True):
         
         
         
@@ -268,8 +268,8 @@ class Sunlike(object):
             # If not on, then I must have turned it off manually (aka not at home)
             # So then you keep it off, but change the setting
 
-            
-            await self.ws_full_inform()
+            if ws_inform:
+                await self.ws_full_inform()
             await self.print_config()
             
             

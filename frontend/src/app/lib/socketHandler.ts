@@ -30,7 +30,6 @@ export default class SocketHandler {
 			setPowerState(data as "on" | "off")
 		}
 		else if (path == "inform-sunrise-time") {
-			console.log(data)
 			let [sunriseHour, sunriseMinute] = data.split(":")
 			setSunriseTime([parseInt(sunriseHour), parseInt(sunriseMinute)])
 		}

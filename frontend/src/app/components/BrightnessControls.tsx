@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react"
+import { ChangeEvent, useContext, useEffect, useRef, useState } from "react"
 import { brightnessStore } from "../stores"
 import { SocketContext } from "../page"
 
@@ -8,17 +8,13 @@ export default function BrightnessControls() {
 	let hasRendered = useRef(false)
 	const socketRef = useContext(SocketContext)
 
-	// async function updateBrightness() {
-	// 	await apiFetch("brightness", { brightness })
-	// }
+	async function handleBrightnessChange(event: ChangeEvent<HTMLInputElement>) {
+		let newBrightness = Number(event.target.value)
+		setBrightness(newBrightness)
+		socketRef?.current?.sendMessage("set-brightness", `${event.target.value}`)
+	}
 
-	useEffect(() => {
-		(async () => {
-			if (!hasRendered) return
-			socketRef?.current?.sendMessage("set-brightness", `${brightness}`)
-		})()
 
-	}, [brightness])
 
 	return (
 		<div>
@@ -30,7 +26,7 @@ export default function BrightnessControls() {
 					className="brightness-slider"
 					style={{ cursor: "pointer", height: "10px" }}
 					value={brightness}
-					onChange={(event) => setBrightness(parseInt(event.target.value))} />
+					onChange={handleBrightnessChange} />
 			</div>
 			{/* <input type="button" value="Set Brightness" onClick={() => { socketRef?.current?.sendMessage("set-brightness", `${brightness}`) }} /> */}
 		</div>
