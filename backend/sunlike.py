@@ -74,7 +74,7 @@ class Sunlike(object):
             try:
                 now = datetime.datetime.now()
                 
-                if now.hour == 9 and now.minute == 30:
+                if now.hour == 12 and now.minute == 00:
                     await self.device.on() # Make sure to turn on first
                     await asyncio.sleep(0.5) # wait for unsaved changes to update
                     await self.set_config(brightness=1, color_temp=2500) # Set to lowest values, so it starts low
@@ -276,7 +276,7 @@ class Sunlike(object):
 
         except Exception as e:
             print("Failed to set config in 'set_config'")
-            raise e
+            print(e)
         
     async def set_as_defaults(self):
         await self.set_config(brightness=self.DEFAULT_BRIGHTNESS, color_temp=self.DEFAULT_COLOR_TEMP)
