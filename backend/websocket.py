@@ -2,7 +2,7 @@
 import websockets, threading, asyncio
 from sunlike import Sunlike
 
-HOST = "192.168.1.105"
+HOST = "192.168.1.106"
 PORT = 5021
 
 async def handle(path: str, data: str, websocket: websockets.WebSocketClientProtocol, sunlike: Sunlike):
@@ -29,6 +29,9 @@ async def handle(path: str, data: str, websocket: websockets.WebSocketClientProt
             await sunlike.device.on()
         elif data == "off":
             await sunlike.device.off()
+    
+    elif path == "set-sunrise-time":
+        sunlike.config_manager.set_config(["sunrise_time"], [data])
     
     elif path == "start-duskfall":
         await sunlike.start_duskfall()

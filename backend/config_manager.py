@@ -2,7 +2,7 @@ class ConfigManager(object):
     def __init__(self, config_file_path: str):
         self.config_file_path = config_file_path
     
-    def get_config(self):
+    def get_config(self) -> dict[str, str]:
         config = {}
         with open(self.config_file_path, "r") as file:
             line = file.readline()

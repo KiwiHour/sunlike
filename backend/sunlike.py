@@ -73,8 +73,9 @@ class Sunlike(object):
 
             try:
                 now = datetime.datetime.now()
+                sunrise_hour, sunrise_minute = self.config_manager.get_config().get("sunrise_time").split(":")
                 
-                if now.hour == 12 and now.minute == 00:
+                if now.hour == int(sunrise_hour) and now.minute == int(sunrise_minute):
                     await self.device.on() # Make sure to turn on first
                     await asyncio.sleep(0.5) # wait for unsaved changes to update
                     await self.set_config(brightness=1, color_temp=2500) # Set to lowest values, so it starts low
