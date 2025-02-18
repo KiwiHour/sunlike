@@ -8,7 +8,7 @@ import SocketHandler from "./lib/socketHandler";
 import SunriseControls from "./components/SunriseControls";
 
 export const SocketContext = createContext<RefObject<SocketHandler | null> | null>(null)
-const createSocket = () => new WebSocket("ws://192.168.1.106:5021")
+const createSocket = () => new WebSocket("ws://192.168.1.105:5021")
 
 export default function Page() {
 

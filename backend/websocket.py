@@ -2,7 +2,7 @@
 import websockets, threading, asyncio
 from sunlike import Sunlike
 
-HOST = "192.168.1.106"
+HOST = "192.168.1.105"
 PORT = 5021
 
 async def handle(path: str, data: str, websocket: websockets.WebSocketClientProtocol, sunlike: Sunlike):
