@@ -137,7 +137,7 @@ class Sunlike(object):
 
     async def start_duskfall(self):
         self.config_manager.set_config([("disabled_sunset", "1")])
-        await self.linear_gradient_set_config(5, end_brightness=1, end_hue=15)
+        await self.linear_gradient_set_config(5, end_brightness=1, end_hue=15, end_saturation=80)
         await self.device.off()
     
     async def sync_config(self):
