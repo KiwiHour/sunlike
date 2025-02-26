@@ -31,7 +31,7 @@ async def handle(path: str, data: str, websocket: websockets.WebSocketClientProt
             await sunlike.device.off()
     
     elif path == "set-sunrise-time":
-        sunlike.config_manager.set_config(["sunrise_time"], [data])
+        sunlike.config_manager.set_config([("sunrise_time", data)])
     
     elif path == "start-duskfall":
         await sunlike.start_duskfall()
