@@ -74,28 +74,35 @@ class Sunlike(object):
             try:
                 now = datetime.datetime.now()
                 sunrise_hour, sunrise_minute = self.config_manager.get_config().get("sunrise_time").split(":")
+                disabled_sunset = bool(self.config_manager.get_config().get("disabled_sunset"))
                 
                 if now.hour == int(sunrise_hour) and now.minute == int(sunrise_minute):
+                    
+                    # Re-enable the sunset for the new day incase it was disabled the night before
+                    self.config_manager.set_config([("disabled_sunset", "0")])
+                    
                     await self.device.on() # Make sure to turn on first
                     await asyncio.sleep(0.5) # wait for unsaved changes to update
                     await self.set_config(brightness=1, color_temp=2500) # Set to lowest values, so it starts low
                     # TODO: learn how to transfer from hue to color_temp at lower brightness for wakeup
                     # That way i can start at red, stay orange mostly, bit of yellow, then go back to temp for rest of the day
                     await self.linear_gradient_set_config(time_m=60, end_brightness=100, end_color_temp=2900)
-                
-                if now.hour == 20 and now.minute == 00:
-                    await self.linear_gradient_set_config(time_m=55, end_brightness=75, end_color_temp=2500)
-                    await asyncio.sleep(30)
-                    await self.shift_from_temp_to_hue()
                     
-                if now.hour == 21 and now.minute == 00:
-                    await self.linear_gradient_set_config(time_m=55, end_brightness=60, end_hue=25, end_saturation=60)
-                
-                if now.hour == 22 and now.minute == 00:
-                    await self.linear_gradient_set_config(time_m=25, end_brightness=35, end_hue=20, end_saturation=60)
                     
-                if now.hour == 22 and now.minute == 45:
-                    await self.linear_gradient_set_config(time_m=25, end_brightness=20, end_hue=15, end_saturation=80)
+                if not disabled_sunset:
+                    if now.hour == 20 and now.minute == 00:
+                        await self.linear_gradient_set_config(time_m=55, end_brightness=75, end_color_temp=2500)
+                        await asyncio.sleep(30)
+                        await self.shift_from_temp_to_hue()
+                        
+                    if now.hour == 21 and now.minute == 00:
+                        await self.linear_gradient_set_config(time_m=55, end_brightness=60, end_hue=25, end_saturation=60)
+                    
+                    if now.hour == 22 and now.minute == 00:
+                        await self.linear_gradient_set_config(time_m=25, end_brightness=35, end_hue=20, end_saturation=60)
+                        
+                    if now.hour == 22 and now.minute == 45:
+                        await self.linear_gradient_set_config(time_m=25, end_brightness=20, end_hue=15, end_saturation=80)
                     
                 await asyncio.sleep(60)
                 
@@ -129,7 +136,8 @@ class Sunlike(object):
                 time.sleep(0.25)
 
     async def start_duskfall(self):
-        await self.linear_gradient_set_config(5, end_brightness=1)
+        self.config_manager.set_config([("disabled_sunset", "1")])
+        await self.linear_gradient_set_config(5, end_brightness=1, end_hue=15)
         await self.device.off()
     
     async def sync_config(self):

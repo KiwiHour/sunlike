@@ -10,14 +10,12 @@ class ConfigManager(object):
             config[key] = val
         return config
     
-    def set_config(self, keys: list[str], values: list[str]):
+    # Updates any keys given, any keys not given will remain unchanged
+    def set_config(self, key_value_pairs: list[(str, str)]):
         config = self.get_config()
-        for i, key in enumerate(keys):
-            config[key] = values[i]
+        for i, (key, value) in enumerate(key_value_pairs):
+            config[key] = value
         
         with open(self.config_file_path, "w") as file:
             formatted_config = [f"{key},{value}" for key, value in config.items()]
             file.write("\n".join(formatted_config))
-
-    
-    
