@@ -16,6 +16,9 @@ class ConfigManager(object):
         for i, (key, value) in enumerate(key_value_pairs):
             config[key] = value
         
+        for key, value in config.items():
+            config[key] = value.replace("\n","")
+        
         with open(self.config_file_path, "w") as file:
-            formatted_config = [f"{key},{value.replace('\n','')}" for key, value in config.items()]
+            formatted_config = [f"{key},{value}" for key, value in config.items()]
             file.write("\n".join(formatted_config))
