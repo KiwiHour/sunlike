@@ -17,5 +17,5 @@ class ConfigManager(object):
             config[key] = value
         
         with open(self.config_file_path, "w") as file:
-            formatted_config = [f"{key},{value}" for key, value in config.items()]
+            formatted_config = [f"{key},{value.replace("\n","")}" for key, value in config.items()]
             file.write("\n".join(formatted_config))
