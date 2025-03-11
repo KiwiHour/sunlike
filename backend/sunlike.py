@@ -80,6 +80,7 @@ class Sunlike(object):
                     
                     # Re-enable the sunset for the new day incase it was disabled the night before
                     self.config_manager.set_config([("disabled_sunset", "0")])
+                    disabled_sunset = False
                     
                     await self.device.on() # Make sure to turn on first
                     await asyncio.sleep(0.5) # wait for unsaved changes to update
@@ -185,8 +186,10 @@ class Sunlike(object):
         sleep_length = round((time_m / total_steps) * 60, 2)
         print(f"Sleep: {sleep_length}, Steps: {total_steps}")
         for _ in range(math.ceil(total_steps)):
-            await self.adjust_config(**adjust_params)
+            if bool(self.config_manager.get_config().get("disabled_sunset")):
+                return # Not a great solution
             
+            await self.adjust_config(**adjust_params)
             await asyncio.sleep(sleep_length)
             
 
