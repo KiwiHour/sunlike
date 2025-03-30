@@ -14,7 +14,7 @@ class Menu
 {
 public:
 	string title;
-	vector<Menu *> children;
+	vector<Menu *> children = {};
 	Menu *parent;
 
 	Menu(Adafruit_SSD1306 &_screen, string _title, Menu *_parent);
@@ -31,7 +31,7 @@ public:
 
 protected:
 	Adafruit_SSD1306 screen;
-	int index;
+	int index = 1;
 };
 
 #endif
