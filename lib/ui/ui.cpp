@@ -5,6 +5,7 @@
 #include <Wire.h>
 
 #include "menu.cpp"
+#include "menus/menu_endpoint.cpp"
 #include "menus/home.cpp"
 #include "menus/submenu.cpp"
 #include "../switch_input.h"
@@ -60,7 +61,7 @@ public:
 			return;
 
 		if (screenOn)
-			currentMenu->handleInput(input);
+			currentMenu->handleInput(input, currentMenu);
 
 		display();
 
@@ -82,9 +83,28 @@ private:
 		HomeMenu *home = new HomeMenu(screen, "Sunlike");
 		home->buildIcons();
 
+		// Home
 		Menu *functions = new SubMenu(screen, "Functions", home);
 		Menu *adjust = new SubMenu(screen, "Adjustments", home);
 		Menu *config = new SubMenu(screen, "Config", home);
+
+		// Functions
+		MenuEndpoint *startDuskfall = new MenuEndpoint(screen, "Start duskfall", functions);
+		MenuEndpoint *pauseSunset = new MenuEndpoint(screen, "Pause sunset", functions);
+		functions->addChildren({startDuskfall, pauseSunset});
+
+		// Adjustments
+		adjust->addChildren({
+			new SubMenu(screen, "Brightness", adjust),
+			new SubMenu(screen, "Temperature", adjust),
+		});
+
+		// Config
+		config->addChildren({
+			new SubMenu(screen, "Sunrise", config),
+			new SubMenu(screen, "Sunset", config),
+			new SubMenu(screen, "Duskfall", config),
+		});
 
 		home->addChildren({functions, adjust, config});
 
