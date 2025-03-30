@@ -31,11 +31,6 @@ public:
 
 	virtual void draw()
 	{
-		string title = "Sunlike";
-		int title_x = getCenteredXCoord(title, 0);
-		screen.setCursor(title_x, 0);
-		screen.print(title.c_str());
-
 		for (int i = 0; i < icons.size(); i++)
 		{
 			icons[i]->draw();
