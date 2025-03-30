@@ -1,5 +1,5 @@
-#ifndef HOME_DISPLAY
-#define HOME_DISPLAY
+#ifndef HOME_MENU
+#define HOME_MENU
 
 #include <vector>
 #include "menu.h"
@@ -31,6 +31,7 @@ public:
 
 	virtual void draw()
 	{
+		drawTitle();
 		for (int i = 0; i < icons.size(); i++)
 		{
 			icons[i]->draw();

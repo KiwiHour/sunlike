@@ -94,7 +94,6 @@ private:
 	void display()
 	{
 		screen.clearDisplay();
-		currentMenu->drawTitle();
 		currentMenu->draw();
 		screen.display();
 	}
