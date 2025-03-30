@@ -19,6 +19,7 @@ public:
 
 	void buildIcons()
 	{
+		index = 1;
 		vector<Icon> iconNames = {FUNCTIONS, ADJUST, CONFIG};
 
 		for (int i = 0; i < iconNames.size(); i++)
@@ -42,18 +43,21 @@ public:
 		}
 	}
 
-	virtual void handleInput(SwitchInput input)
+	virtual void handleInput(SwitchInput input, Menu *&currentMenu)
 	{
 		if (input == RIGHT)
 			index++;
 		if (input == LEFT)
 			index--;
+		if (input == PUSH)
+		{
+			currentMenu = currentMenu->children[index];
+			currentMenu->index = 0;
+		}
 
-		if (index < 0)
-			index = icons.size() - 1;
-		if (index > icons.size() - 1)
-			index = 0;
+		clampIndex(icons.size() - 1);
 	}
+
 	virtual void handleIdle()
 	{
 		index = 1;
