@@ -79,7 +79,7 @@ private:
 
 	void build()
 	{
-		HomeMenu *home = new HomeMenu(screen, "Home");
+		HomeMenu *home = new HomeMenu(screen, "Sunlike");
 		home->buildIcons();
 
 		Menu *functions = new SubMenu(screen, "Functions", home);
@@ -94,6 +94,7 @@ private:
 	void display()
 	{
 		screen.clearDisplay();
+		currentMenu->drawTitle();
 		currentMenu->draw();
 		screen.display();
 	}

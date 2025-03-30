@@ -13,17 +13,18 @@ using namespace std;
 class Menu
 {
 public:
-	string label;
+	string title;
 	vector<Menu *> children;
 	Menu *parent;
 
-	Menu(Adafruit_SSD1306 &_screen, string _label, Menu *_parent);
+	Menu(Adafruit_SSD1306 &_screen, string _title, Menu *_parent);
 
 	void addChildren(vector<Menu *> _children);
 
 	// Centered along the x-axis of the entire screen
 	int getCenteredXCoord(string text, int y);
 
+	void drawTitle();
 	virtual void draw() = 0;
 	virtual void handleInput(SwitchInput input) = 0;
 	virtual void handleIdle() = 0;

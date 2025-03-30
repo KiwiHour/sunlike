@@ -11,7 +11,7 @@ class SubMenu : public Menu
 
 	virtual void draw()
 	{
-		screen.println(label.c_str());
+		screen.println(title.c_str());
 	}
 	virtual void handleInput(SwitchInput input) {}
 	virtual void handleIdle() {}
