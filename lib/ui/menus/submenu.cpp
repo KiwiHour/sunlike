@@ -1,5 +1,5 @@
-#ifndef SUBMENU_DISPLAY
-#define SUBMENU_DISPLAY
+#ifndef SUBMENU
+#define SUBMENU
 
 #include "menu.h"
 
@@ -11,6 +11,7 @@ class SubMenu : public Menu
 
 	virtual void draw()
 	{
+		drawTitle();
 		screen.println(title.c_str());
 	}
 	virtual void handleInput(SwitchInput input) {}
