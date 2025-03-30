@@ -28,6 +28,14 @@ void Menu::drawTitle()
 	screen.print(title.c_str());
 }
 
+void Menu::clampIndex(int upper)
+{
+	if (index < 0)
+		index = upper;
+	if (index > upper)
+		index = 0;
+}
+
 int Menu::getCenteredXCoord(string text, int y0)
 {
 	int16_t x1, y1;
