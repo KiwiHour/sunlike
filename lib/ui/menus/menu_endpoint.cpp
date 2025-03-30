@@ -1,21 +1,46 @@
-#ifndef MENU_ENDPOINT
-#define MENU_ENDPOINT
+#ifndef ENDPOINT
+#define ENDPOINT
 
 #include "menu.h"
 
-using namespace std;
-
-/* This menu item won't show a list of options, it'll either be confirmation message or control for a value like brightness or hue
- */
 class MenuEndpoint : public Menu
 {
+public:
+	bool drawn = false;
+	function<bool()> func = nullptr;
+
 	using Menu::Menu;
 
+	void setFunction(function<bool()> _func)
+	{
+		func = _func;
+	}
+
+	// Will run the assigned function upon being drawn
 	virtual void draw()
 	{
-		screen.println("endpoint");
+		drawTitle();
+		screen.println();
+
+		// Check function is assigned
+		if (func == nullptr)
+		{
+			screen.println("No function assigned :/");
+			return;
+		}
+
+		bool success = func();
+		string message = success ? "Success :)" : "Failed :(";
+
+		screen.println(message.c_str());
 	}
-	virtual void handleInput(SwitchInput input) {}
+
+	virtual void handleInput(SwitchInput input, Menu *&currentMenu)
+	{
+		if (input == LEFT || input == PUSH)
+			currentMenu = currentMenu->parent;
+	}
+
 	virtual void handleIdle() {}
 };
 
