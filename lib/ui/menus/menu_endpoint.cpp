@@ -6,7 +6,6 @@
 class MenuEndpoint : public Menu
 {
 public:
-	bool drawn = false;
 	function<bool()> func = nullptr;
 
 	using Menu::Menu;
@@ -20,28 +19,30 @@ public:
 	virtual void draw()
 	{
 		drawTitle();
-		screen.println();
+		screen->println();
 
 		// Check function is assigned
 		if (func == nullptr)
 		{
-			screen.println("No function assigned :/");
+			screen->println("No function assigned :/");
 			return;
 		}
 
 		bool success = func();
 		string message = success ? "Success :)" : "Failed :(";
 
-		screen.println(message.c_str());
+		screen->println(message.c_str());
 	}
 
-	virtual void handleInput(SwitchInput input, Menu *&currentMenu)
+	virtual InputResponse handleInput(SwitchInput input)
 	{
-		if (input == LEFT || input == PUSH)
-			currentMenu = currentMenu->parent;
+		if (input == SwitchInput::LEFT || input == SwitchInput::PUSH)
+			return InputResponse::GO_BACK;
+
+		return InputResponse::STAY;
 	}
 
-	virtual void handleIdle() {}
+	virtual void onIdle() {}
 };
 
 #endif

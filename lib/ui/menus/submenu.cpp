@@ -13,37 +13,35 @@ public:
 	virtual void draw()
 	{
 		drawTitle();
-		screen.print("\n");
+		screen->print("\n");
 
 		for (int i = 0; i < children.size(); i++)
 		{
 			if (i == index)
-				screen.print("> ");
+				screen->print("> ");
 			else
-				screen.print("  ");
+				screen->print("  ");
 
-			screen.println(children[i]->title.c_str());
+			screen->println(children[i]->title.c_str());
 		}
 	}
 
-	virtual void handleInput(SwitchInput input, Menu *&currentMenu)
+	virtual InputResponse handleInput(SwitchInput input)
 	{
-		if (input == UP)
-			index++;
-		if (input == DOWN)
+		if (input == SwitchInput::UP)
 			index--;
-		if (input == PUSH)
-		{
-			currentMenu = currentMenu->children[index];
-			currentMenu->index = 0;
-		}
-		if (input == LEFT)
-			currentMenu = currentMenu->parent;
+		if (input == SwitchInput::DOWN)
+			index++;
+		if (input == SwitchInput::PUSH)
+			return InputResponse::GO_INTO;
+		if (input == SwitchInput::LEFT)
+			return InputResponse::GO_BACK;
 
 		clampIndex(children.size() - 1);
+		return InputResponse::STAY;
 	}
 
-	virtual void handleIdle()
+	virtual void onIdle()
 	{
 		index = 0;
 	}
