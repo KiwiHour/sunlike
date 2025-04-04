@@ -5,12 +5,12 @@ class InputHandler
 {
 private:
 	const int PUSH_PIN = 5;
-	const int UP_PIN = 11;
+	const int UP_PIN = 9;
 	const int RIGHT_PIN = 10;
-	const int DOWN_PIN = 9;
+	const int DOWN_PIN = 11;
 	const int LEFT_PIN = 6;
 
-	SwitchInput previousInput = NONE;
+	SwitchInput previousInput = SwitchInput::NONE;
 
 public:
 	void begin()
@@ -27,29 +27,40 @@ public:
 		SwitchInput input;
 
 		if (digitalRead(PUSH_PIN) == 0)
-			input = PUSH;
+			input = SwitchInput::PUSH;
 		else if (digitalRead(UP_PIN) == 0)
-			input = UP;
+			input = SwitchInput::UP;
 		else if (digitalRead(RIGHT_PIN) == 0)
-			input = RIGHT;
+			input = SwitchInput::RIGHT;
 		else if (digitalRead(DOWN_PIN) == 0)
-			input = DOWN;
+			input = SwitchInput::DOWN;
 		else if (digitalRead(LEFT_PIN) == 0)
-			input = LEFT;
+			input = SwitchInput::LEFT;
 		else
-			input = NONE;
+			input = SwitchInput::NONE;
 
-		if (input != NONE && previousInput == NONE)
+		if (input != SwitchInput::NONE && previousInput == SwitchInput::NONE)
 		{
 			previousInput = input;
 			return input;
 		}
 
-		if (input == NONE && previousInput != NONE)
+		if (input == SwitchInput::NONE && previousInput != SwitchInput::NONE)
 		{
-			previousInput = NONE;
+			previousInput = SwitchInput::NONE;
 		}
 
-		return NONE;
+		if (input == SwitchInput::PUSH)
+			return SwitchInput::HOLDING_PUSH;
+		if (input == SwitchInput::LEFT)
+			return SwitchInput::HOLDING_LEFT;
+		if (input == SwitchInput::RIGHT)
+			return SwitchInput::HOLDING_RIGHT;
+		if (input == SwitchInput::UP)
+			return SwitchInput::HOLDING_UP;
+		if (input == SwitchInput::DOWN)
+			return SwitchInput::HOLDING_DOWN;
+
+		return SwitchInput::NONE;
 	}
 };
