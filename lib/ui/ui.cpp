@@ -8,6 +8,7 @@
 #include "menus/menu_endpoint.cpp"
 #include "menus/home.cpp"
 #include "menus/submenu.cpp"
+#include "menus/config_menu.cpp"
 #include "../switch_input.h"
 
 // Settings
@@ -18,19 +19,29 @@
 
 using namespace std;
 
+// TODO: remove
+
+int testVal = 69;
+bool testSetter(int x)
+{
+	testVal = x;
+	return true;
+}
+int testGetter() { return testVal; }
+
 class UI
 {
 
 public:
 	void begin()
 	{
-		screen = Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
-		screen.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR);
+		screen = new Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+		screen->begin(SSD1306_SWITCHCAPVCC, OLED_ADDR);
 
-		screen.setTextSize(1);
-		screen.setCursor(0, 0);
-		screen.setTextColor(WHITE);
-		screen.clearDisplay();
+		screen->setTextSize(1);
+		screen->setCursor(0, 0);
+		screen->setTextColor(WHITE);
+		screen->clearDisplay();
 
 		build();
 		display();
@@ -43,13 +54,15 @@ public:
 
 		if (millis() - lastInputMillis > IDLE_TIMEOUT_MS)
 		{
-			// TODO: Go back to the root and home menu;
+			// Go back to the home menu;
+			currentMenu->onIdle(); // Make sure to handle the idle of the menu before going back to home
 			while (currentMenu->parent != nullptr)
 				currentMenu = currentMenu->parent;
 
-			currentMenu->handleIdle();
-			screen.clearDisplay();
-			screen.display();
+			// Go idle (turn off screen)
+			currentMenu->onIdle();
+			screen->clearDisplay();
+			screen->display();
 			screenOn = false;
 		};
 	}
@@ -57,20 +70,32 @@ public:
 	void handleInput(SwitchInput input)
 	{
 
-		if (input == NONE)
+		if (input == SwitchInput::NONE)
 			return;
 
 		if (screenOn)
-			currentMenu->handleInput(input, currentMenu);
+		{
+			InputResponse response = currentMenu->handleInput(input);
+			if (response == InputResponse::GO_INTO)
+			{
+				currentMenu = currentMenu->children[currentMenu->index];
+				currentMenu->index = 0;
+				currentMenu->onEnter();
+			}
+			else if (response == InputResponse::GO_BACK)
+			{
+				currentMenu = currentMenu->parent;
+			}
+		}
 
 		display();
+		screenOn = true;
 
 		lastInputMillis = millis();
-		screenOn = true;
 	}
 
 private:
-	Adafruit_SSD1306 screen;
+	Adafruit_SSD1306 *screen;
 
 	// State
 	Menu *currentMenu = nullptr;
@@ -80,41 +105,43 @@ private:
 
 	void build()
 	{
-		HomeMenu *home = new HomeMenu(screen, "Sunlike");
+		Menu::setScreen(screen);
+
+		HomeMenu *home = new HomeMenu("Sunlike");
 		home->buildIcons();
 
 		// Home
-		Menu *functions = new SubMenu(screen, "Functions", home);
-		Menu *adjust = new SubMenu(screen, "Adjustments", home);
-		Menu *config = new SubMenu(screen, "Config", home);
+		Menu *functions = new SubMenu("Functions", home);
+		ConfigMenu *adjust = new ConfigMenu("Adjustments", home);
+		Menu *config = new SubMenu("Config", home);
+		home->addChildren({functions, adjust, config});
 
 		// Functions
-		MenuEndpoint *startDuskfall = new MenuEndpoint(screen, "Start duskfall", functions);
-		MenuEndpoint *pauseSunset = new MenuEndpoint(screen, "Pause sunset", functions);
+		MenuEndpoint *startDuskfall = new MenuEndpoint("Start duskfall", functions);
+		MenuEndpoint *pauseSunset = new MenuEndpoint("Pause sunset", functions);
 		functions->addChildren({startDuskfall, pauseSunset});
 
 		// Adjustments
-		adjust->addChildren({
-			new SubMenu(screen, "Brightness", adjust),
-			new SubMenu(screen, "Temperature", adjust),
+		adjust->addControllers({
+			new ConfigController("Brightness", {testGetter}, {testSetter}),
+			new ConfigController("Temperature", {testGetter}, {testSetter}),
+			new ConfigController("Time", {testGetter, testGetter}, {testSetter, testSetter}),
 		});
 
 		// Config
 		config->addChildren({
-			new SubMenu(screen, "Sunrise", config),
-			new SubMenu(screen, "Sunset", config),
-			new SubMenu(screen, "Duskfall", config),
+			new SubMenu("Sunrise", config),
+			new SubMenu("Sunset", config),
+			new SubMenu("Duskfall", config),
 		});
-
-		home->addChildren({functions, adjust, config});
 
 		currentMenu = home;
 	}
 
 	void display()
 	{
-		screen.clearDisplay();
+		screen->clearDisplay();
 		currentMenu->draw();
-		screen.display();
+		screen->display();
 	}
 };
