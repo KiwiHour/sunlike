@@ -29,8 +29,14 @@ void Menu::addChildren(vector<Menu *> _children)
 
 void Menu::drawTitle()
 {
+	screen->setCursor(0, 0);
 	int title_x = getCenteredXCoord(title, 0);
+
+	// Draw two times with an offset to give a "bold" look
 	screen->setCursor(title_x, 0);
+	screen->print(title.c_str());
+
+	screen->setCursor(title_x + 1, 0);
 	screen->print(title.c_str());
 }
 
