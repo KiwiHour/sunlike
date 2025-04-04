@@ -27,5 +27,5 @@ void loop()
 	ui.handleInput(input);
 	ui.tick();
 
-	delay(10);
+	delay(100);
 }

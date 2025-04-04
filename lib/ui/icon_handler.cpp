@@ -11,7 +11,7 @@ class IconHandler
 public:
 	Icon icon;
 
-	IconHandler(Adafruit_SSD1306 &_screen, Icon _icon, int _x, int _y)
+	IconHandler(Adafruit_SSD1306 *_screen, Icon _icon, int _x, int _y)
 	{
 		icon = _icon;
 		screen = _screen;
@@ -27,7 +27,7 @@ public:
 
 	void draw()
 	{
-		screen.drawBitmap(x, y, bitmap.data(), 32, 32, WHITE);
+		screen->drawBitmap(x, y, bitmap.data(), 32, 32, WHITE);
 	}
 
 	std::string getLabel()
@@ -48,6 +48,6 @@ public:
 private:
 	int x;
 	int y;
-	Adafruit_SSD1306 screen;
+	Adafruit_SSD1306 *screen;
 	array<byte, 128> bitmap;
 };

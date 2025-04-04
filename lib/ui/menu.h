@@ -2,7 +2,6 @@
 #define MENU
 
 #include <vector>
-#include <Arduino.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
@@ -10,15 +9,24 @@
 
 using namespace std;
 
+enum class InputResponse
+{
+	GO_INTO,
+	GO_BACK,
+	STAY
+};
+
 class Menu
 {
 public:
+	static Adafruit_SSD1306 *screen;
 	string title;
 	vector<Menu *> children = {};
 	Menu *parent;
 	int index = 0;
 
-	Menu(Adafruit_SSD1306 &_screen, string _title, Menu *_parent);
+	Menu(string _title, Menu *_parent);
+	static void setScreen(Adafruit_SSD1306 *_screen);
 
 	void addChildren(vector<Menu *> _children);
 	void clampIndex(int upper);
@@ -28,11 +36,9 @@ public:
 
 	void drawTitle();
 	virtual void draw() = 0;
-	virtual void handleInput(SwitchInput input, Menu *&currentMenu) = 0;
-	virtual void handleIdle() = 0;
-
-protected:
-	Adafruit_SSD1306 screen;
+	virtual InputResponse handleInput(SwitchInput input) = 0;
+	virtual void onIdle() = 0;
+	virtual void onEnter() {}
 };
 
 #endif

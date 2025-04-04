@@ -43,22 +43,20 @@ public:
 		}
 	}
 
-	virtual void handleInput(SwitchInput input, Menu *&currentMenu)
+	virtual InputResponse handleInput(SwitchInput input)
 	{
-		if (input == RIGHT)
+		if (input == SwitchInput::RIGHT)
 			index++;
-		if (input == LEFT)
+		if (input == SwitchInput::LEFT)
 			index--;
-		if (input == PUSH)
-		{
-			currentMenu = currentMenu->children[index];
-			currentMenu->index = 0;
-		}
+		if (input == SwitchInput::PUSH)
+			return InputResponse::GO_INTO;
 
 		clampIndex(icons.size() - 1);
+		return InputResponse::STAY;
 	}
 
-	virtual void handleIdle()
+	virtual void onIdle()
 	{
 		index = 1;
 	}
@@ -70,19 +68,19 @@ private:
 	{
 		int16_t x1, y1;
 		uint16_t width, height;
-		screen.getTextBounds(label.c_str(), x0, y0, &x1, &y1, &width, &height);
+		screen->getTextBounds(label.c_str(), x0, y0, &x1, &y1, &width, &height);
 
 		// Set new x and y pos based on the bounds
 		x0 = x1 + ((32 - width) / 2);
 		y0 = y1;
-		screen.setCursor(x0, y0);
-		screen.print(label.c_str());
+		screen->setCursor(x0, y0);
+		screen->print(label.c_str());
 
 		if (underline)
 		{
 			int line_x0 = x0 - 1;
 			int line_y0 = y0 + height + 1;
-			screen.drawFastHLine(line_x0, line_y0, width, WHITE);
+			screen->drawFastHLine(line_x0, line_y0, width, WHITE);
 		}
 	}
 };
