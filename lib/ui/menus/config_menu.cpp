@@ -46,7 +46,7 @@ public:
 					screen->setTextColor(BLACK, WHITE);
 
 				screen->print(controller->values[j]->getFormattedValue().c_str());
-				screen->setTextColor(WHITE, BLACK);
+				screen->setTextColor(WHITE);
 
 				// Padding only for between values, not at the end
 				if (j < controller->values.size() - 1)
