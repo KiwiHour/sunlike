@@ -103,6 +103,12 @@ private:
 	bool screenOn = true;
 	unsigned long lastInputMillis;
 
+	/*
+		##########################################
+		##		BUILDING THE MENU STRUCTURE		##
+		##########################################
+	*/
+
 	void build()
 	{
 		Menu::setScreen(screen);
@@ -111,32 +117,57 @@ private:
 		home->buildIcons();
 
 		// Home
-		Menu *functions = new SubMenu("Functions", home);
-		ConfigMenu *adjust = new ConfigMenu("Adjustments", home);
-		Menu *config = new SubMenu("Config", home);
+		Menu *functions = buildFunctionsMenu(home);
+		Menu *adjust = buildAdjustMenu(home);
+		Menu *config = buildConfigMenu(home);
 		home->addChildren({functions, adjust, config});
 
-		// Functions
+		currentMenu = home;
+	}
+
+	Menu *buildFunctionsMenu(Menu *home)
+	{
+		SubMenu *functions = new SubMenu("Functions", home);
+
 		MenuEndpoint *startDuskfall = new MenuEndpoint("Start duskfall", functions);
 		MenuEndpoint *pauseSunset = new MenuEndpoint("Pause sunset", functions);
 		functions->addChildren({startDuskfall, pauseSunset});
 
-		// Adjustments
+		return functions;
+	}
+
+	Menu *buildAdjustMenu(Menu *home)
+	{
+		ConfigMenu *adjust = new ConfigMenu("Adjustments", home);
+
 		adjust->addControllers({
 			new ConfigController("Brightness", {testGetter}, {testSetter}),
 			new ConfigController("Temperature", {testGetter}, {testSetter}),
 			new ConfigController("Time", {testGetter, testGetter}, {testSetter, testSetter}),
 		});
 
-		// Config
-		config->addChildren({
-			new SubMenu("Sunrise", config),
-			new SubMenu("Sunset", config),
-			new SubMenu("Duskfall", config),
-		});
-
-		currentMenu = home;
+		return adjust;
 	}
+
+	Menu *buildConfigMenu(Menu *home)
+	{
+		SubMenu *config = new SubMenu("Config", home);
+
+		// Config submenus
+		SubMenu *sunriseConfig = new SubMenu("Sunrise", config);
+		SubMenu *sunsetConfig = new SubMenu("Sunset", config);
+		SubMenu *duskfallConfig = new SubMenu("Duskfall", config);
+
+		config->addChildren({sunriseConfig, sunsetConfig, duskfallConfig});
+
+		return config;
+	}
+
+	/*
+		###########################################
+		## /END BUILDING THE MENU STRUCTURE	END/ ##
+		###########################################
+	*/
 
 	void display()
 	{
