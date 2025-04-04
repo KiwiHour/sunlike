@@ -6,9 +6,6 @@
 
 using namespace std;
 
-typedef function<int()> Getter;
-typedef function<bool(int)> Setter;
-
 class ConfigController
 {
 private:
