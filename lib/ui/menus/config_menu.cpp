@@ -34,7 +34,7 @@ public:
 			int paddingChars = 21 - 2 - controller->name.length() - (controller->values.size() - 1);
 
 			for (int i = 0; i < controller->values.size(); i++)
-				paddingChars -= controller->getFormattedValue(i).length();
+				paddingChars -= controller->values[i]->getFormattedValue().length();
 
 			for (int i = 0; i < paddingChars; i++)
 				screen->print(" ");
@@ -45,7 +45,7 @@ public:
 				if (i == index && j == controller->index)
 					screen->setTextColor(BLACK, WHITE);
 
-				screen->print(controller->values[j]);
+				screen->print(controller->values[j]->getFormattedValue().c_str());
 				screen->setTextColor(WHITE, BLACK);
 
 				// Padding only for between values, not at the end
