@@ -23,13 +23,23 @@ public:
 		{
 			ConfigController *controller = controllers[i];
 			if (i == index)
+			{
+				// If controller selected (aka, value being "looked at"), then make > bold
+				if (controller->index != -1)
+				{
+					int x = screen->getCursorX();
+					screen->setCursor(x + 1, screen->getCursorY());
+					screen->print("> ");
+					screen->setCursor(x, screen->getCursorY());
+				}
 				screen->print("> ");
+			}
 			else
 				screen->print("  ");
 
 			screen->print(controller->name.c_str());
 
-			// Add padding
+			// Justify values to the righthand side
 			// PADDING = MAX_CHARS - SELECTOR CHAR (>) PADDING - CONTROLLER NAME SIZE - PADDING BETWEEN VALUES - SIZE OF VALUES
 			int paddingChars = 21 - 2 - controller->name.length() - (controller->values.size() - 1);
 
