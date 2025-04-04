@@ -63,7 +63,7 @@ public:
 
 	void clampIndex()
 	{
-		if (index > values.size() - 1)
+		if (index > (int)values.size() - 1)
 			index = 0;
 		else if (index < 0)
 			index = values.size() - 1;
