@@ -141,9 +141,12 @@ private:
 		ConfigMenu *adjust = new ConfigMenu("Adjustments", home);
 
 		adjust->addControllers({
-			new ConfigController("Brightness", {testGetter}, {testSetter}),
-			new ConfigController("Temperature", {testGetter}, {testSetter}),
-			new ConfigController("Time", {testGetter, testGetter}, {testSetter, testSetter}),
+			new ConfigController("Brightness", {new ValueController(testGetter, testSetter, 0, 100)}),
+			new ConfigController("Temperature", {new ValueController(testGetter, testSetter, 2700, 5400)}),
+			new ConfigController("Time", {
+											 new ValueController(testGetter, testSetter, 0, 23, 2, '0'),
+											 new ValueController(testGetter, testSetter, 0, 59, 2, '0'),
+										 }),
 		});
 
 		return adjust;
@@ -157,7 +160,6 @@ private:
 		SubMenu *sunriseConfig = new SubMenu("Sunrise", config);
 		SubMenu *sunsetConfig = new SubMenu("Sunset", config);
 		SubMenu *duskfallConfig = new SubMenu("Duskfall", config);
-
 		config->addChildren({sunriseConfig, sunsetConfig, duskfallConfig});
 
 		return config;

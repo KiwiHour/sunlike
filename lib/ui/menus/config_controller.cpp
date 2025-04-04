@@ -2,6 +2,7 @@
 #define CONFIG_CONTROLLER
 
 #include "menu.h"
+#include "value_controller.cpp"
 
 using namespace std;
 
@@ -11,64 +12,22 @@ typedef function<bool(int)> Setter;
 class ConfigController
 {
 private:
-	vector<Getter> getters = {};
-	vector<Setter> setters = {};
-	size_t padSize;
-	char padChar;
-
 public:
 	string name;
-	vector<int> values = {};
 	int index = -1;
+	vector<ValueController *> values = {};
 
-	ConfigController(string _name, vector<Getter> _getters, vector<Setter> _setters, size_t _padSize = 0, char _padChar = '?')
+	ConfigController(string _name, vector<ValueController *> _values)
 	{
 		name = _name;
-		getters = _getters;
-		setters = _setters;
-		padSize = _padSize;
-		padChar = _padChar;
-
-		values.resize(getters.size());
-	}
-
-	string getFormattedValue(int _index)
-	{
-		string str = to_string(values[_index]);
-
-		// Pad if desired
-		if (padSize > 0)
-		{
-			if (str.length() < padSize)
-				str = string(padSize - str.length(), padChar) + str;
-		}
-
-		return str;
-	}
-
-	// Call the nth getter and return the response
-	int get(int _index)
-	{
-		return getters[_index]();
-	}
-
-	// Call the nth setter and update value as well
-	int set(int _index, int value)
-	{
-		bool success = setters[_index](value);
-
-		// TODO: maybe remove this if theres some rubberbanding?
-		if (success)
-			values[_index] = get(_index);
-
-		return success;
+		values = _values;
 	}
 
 	void refreshValues()
 	{
-		for (int i = 0; i < values.size(); i++)
+		for (ValueController *value : values)
 		{
-			values[i] = get(i);
+			value->fetch();
 		}
 	}
 
@@ -81,7 +40,7 @@ public:
 				index = 0;
 			else
 			{
-				set(index, values[index]); // TODO: this NOT good coding
+				values[index]->flush();
 				index = -1;
 			}
 		}
@@ -97,7 +56,8 @@ public:
 		{
 			int delta = (input == SwitchInput::UP || input == SwitchInput::HOLDING_UP) ? 1 : -1;
 
-			values[index] += delta;
+			values[index]->adjust(delta);
+			values[index]->circularClamp();
 		}
 	}
 
