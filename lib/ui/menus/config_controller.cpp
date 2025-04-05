@@ -9,6 +9,8 @@ using namespace std;
 class ConfigController
 {
 private:
+	int holdCount = 0; // Amount of instances of being held down
+
 public:
 	string name;
 	int index = -1;
@@ -49,13 +51,9 @@ public:
 			index += delta;
 			clampIndex();
 		}
-		if (input == SwitchInput::UP || input == SwitchInput::DOWN || input == SwitchInput::HOLDING_UP || input == SwitchInput::HOLDING_DOWN)
-		{
-			int delta = (input == SwitchInput::UP || input == SwitchInput::HOLDING_UP) ? 1 : -1;
 
-			values[index]->adjust(delta);
-			values[index]->circularClamp();
-		}
+		// Handle how the value changes
+		values[index]->handleInput(input);
 	}
 
 	void clampIndex()
