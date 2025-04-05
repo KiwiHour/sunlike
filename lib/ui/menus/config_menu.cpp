@@ -30,6 +30,8 @@ public:
 					int x = screen->getCursorX();
 					screen->setCursor(x + 1, screen->getCursorY());
 					screen->print("> ");
+					screen->setCursor(x - 1, screen->getCursorY());
+					screen->print("> ");
 					screen->setCursor(x, screen->getCursorY());
 				}
 				screen->print("> ");
