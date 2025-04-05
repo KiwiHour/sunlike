@@ -20,8 +20,8 @@ public:
 
 		// The constant number here is a scalar for how fast the value changes when holding an input
 		// Higher deltaRate means slower increase (stupid I know), so decreasing the constant number will speed up the rate
-		// Clamped between 1 and 8, anything higher than 8 proved to be a bit too slow even for small ranges
-		deltaRate = max(1, min(8, (int)round(225.0 / (maxValue - minValue))));
+		// Clamped between 1 and 6, anything higher than 8 proved to be a bit too slow even for small ranges
+		deltaRate = max(1, min(6, (int)round(225.0 / (maxValue - minValue))));
 	}
 
 	void handleInput(SwitchInput input)
