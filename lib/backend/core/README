@@ -1,0 +1,3 @@
+Put in whatever smart bulb API you'd like.
+I'm using [tapo-core](https://github.com/KiwiHour/tapo-core) with [tplink-core](https://github.com/KiwiHour/tplink-core)
+But you are welcome to use whatever you'd like and modify the adapter accordingly
