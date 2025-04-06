@@ -4,8 +4,8 @@
 #include <Adafruit_SSD1306.h>
 #include <Wire.h>
 
-#include "../lib/input_handler.cpp"
-#include "ui.cpp"
+#include "../frontend/input_handler.cpp"
+#include "../frontend/ui/ui.cpp"
 
 using namespace std;
 

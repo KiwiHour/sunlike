@@ -162,6 +162,8 @@ private:
 		SubMenu *duskfallConfig = new SubMenu("Duskfall", config);
 		config->addChildren({sunriseConfig, sunsetConfig, duskfallConfig});
 
+		// TODO: add ConfigMenus for each of these submenus (need duration and start time, maybe stuff like ending brightness and hue? prob not)
+
 		return config;
 	}
 

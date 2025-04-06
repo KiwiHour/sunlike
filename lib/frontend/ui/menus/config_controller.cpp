@@ -1,7 +1,7 @@
 #ifndef CONFIG_CONTROLLER
 #define CONFIG_CONTROLLER
 
-#include "menu.h"
+#include "../menu.h"
 #include "value_controller.cpp"
 
 using namespace std;

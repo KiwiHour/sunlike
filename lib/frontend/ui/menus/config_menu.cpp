@@ -1,7 +1,7 @@
 #ifndef CONFIG_MENU
 #define CONFIG_MENU
 
-#include "menu.h"
+#include "../menu.h"
 #include "config_controller.cpp"
 
 class ConfigMenu : public Menu
