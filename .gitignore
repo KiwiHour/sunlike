@@ -1,3 +1,4 @@
 .pio
 .vscode
-
+lib/backend/core/*
+!lib/backend/core/README
