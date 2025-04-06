@@ -1,7 +1,7 @@
 #ifndef VALUE_CONTROLLER
 #define VALUE_CONTROLLER
 
-#include "menu.h"
+#include "../menu.h"
 
 typedef function<int()> Getter;
 typedef function<bool(int)> Setter;

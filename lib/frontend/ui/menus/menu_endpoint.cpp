@@ -1,7 +1,7 @@
 #ifndef ENDPOINT
 #define ENDPOINT
 
-#include "menu.h"
+#include "../menu.h"
 
 class MenuEndpoint : public Menu
 {
