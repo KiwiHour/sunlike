@@ -141,12 +141,8 @@ private:
 		ConfigMenu *adjust = new ConfigMenu("Adjustments", home);
 
 		adjust->addControllers({
-			new ConfigController("Brightness", {new ValueController(testGetter, testSetter, 0, 100)}),
-			new ConfigController("Temperature", {new ValueController(testGetter, testSetter, 2700, 5400)}),
-			new ConfigController("Time", {
-											 new ValueController(testGetter, testSetter, 0, 23, 2, '0'),
-											 new ValueController(testGetter, testSetter, 0, 59, 2, '0'),
-										 }),
+			new ConfigController("Brightness", {new ValueController("brightness", 1, 100)}),
+
 		});
 
 		return adjust;

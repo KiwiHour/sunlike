@@ -2,6 +2,7 @@
 #define CONFIG_MENU
 
 #include "../menu.h"
+#include "../backend/state_controller.h"
 #include "config_controller.cpp"
 
 class ConfigMenu : public Menu
@@ -69,17 +70,6 @@ public:
 		}
 	}
 
-	void refreshAllValues()
-	{
-		for (ConfigController *controller : controllers)
-			controller->refreshValues();
-	}
-
-	void refreshValue(int index)
-	{
-		controllers[index]->refreshValues();
-	}
-
 	void addControllers(vector<ConfigController *> _controllers)
 	{
 		controllers.insert(controllers.end(), _controllers.begin(), _controllers.end());
@@ -117,7 +107,8 @@ public:
 
 	virtual void onEnter()
 	{
-		refreshAllValues();
+		// Refresh the state
+		state->fetch();
 	}
 };
 

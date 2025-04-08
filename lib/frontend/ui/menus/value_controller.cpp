@@ -2,6 +2,7 @@
 #define VALUE_CONTROLLER
 
 #include "../menu.h"
+#include "../backend/state_controller.h"
 
 typedef function<int()> Getter;
 typedef function<bool(int)> Setter;
@@ -9,10 +10,9 @@ typedef function<bool(int)> Setter;
 class ValueController
 {
 public:
-	ValueController(Getter _getter, Setter _setter, int _minValue, int _maxValue, size_t _padSize = 0, char _padChar = '?')
+	ValueController(const std::string &_name, int _minValue, int _maxValue, size_t _padSize = 0, char _padChar = '?')
 	{
-		getter = _getter;
-		setter = _setter;
+		name = _name;
 		minValue = _minValue;
 		maxValue = _maxValue;
 		padSize = _padSize;
@@ -44,14 +44,15 @@ public:
 
 			int delta = (input == SwitchInput::UP || input == SwitchInput::HOLDING_UP) ? 1 : -1;
 
-			adjust(delta);
+			state->adjust(name, delta);
 			circularClamp();
 		}
 	}
 
 	string getFormattedValue()
 	{
-		string str = to_string(value);
+		string str = to_string(getValue());
+		Serial.println(getValue());
 
 		// Pad if desired
 		if (padSize > 0)
@@ -63,49 +64,26 @@ public:
 		return str;
 	}
 
-	void set(int _value)
-	{
-		value = _value;
-	}
-	int get()
-	{
-		return value;
-	}
-	void adjust(int delta)
-	{
-		set(get() + delta);
-	}
-
 	void clamp()
 	{
-		value = max(minValue, min(maxValue, value));
+		int clampedValue = max(minValue, min(maxValue, getValue()));
+		setValue(clampedValue);
 	}
 	// Clamps values, but going below or under the limits causes it to loop back
 	void circularClamp()
 	{
-		if (value > maxValue)
-			value = minValue;
-		else if (value < minValue)
+		if (getValue() > maxValue)
 		{
-			value = maxValue;
+			setValue(minValue);
+		}
+		else if (getValue() < minValue)
+		{
+			setValue(maxValue);
 		}
 	}
 
-	// Updates the internal value with the given getter
-	void fetch()
-	{
-		value = getter();
-	}
-	// Uses the given setter with the internal value
-	void flush()
-	{
-		setter(value);
-	}
-
 private:
-	int value;
-	Getter getter;
-	Setter setter;
+	std::string name;
 	int minValue;
 	int maxValue;
 
@@ -114,6 +92,16 @@ private:
 
 	int deltaRate;
 	int holdCount;
+
+	int getValue()
+	{
+		return state->get(name);
+	}
+
+	bool setValue(int value)
+	{
+		return state->set(name, value);
+	}
 };
 
 #endif

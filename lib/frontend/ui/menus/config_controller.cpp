@@ -2,6 +2,7 @@
 #define CONFIG_CONTROLLER
 
 #include "../menu.h"
+#include "../backend/state_controller.h"
 #include "value_controller.cpp"
 
 using namespace std;
@@ -22,14 +23,6 @@ public:
 		values = _values;
 	}
 
-	void refreshValues()
-	{
-		for (ValueController *value : values)
-		{
-			value->fetch();
-		}
-	}
-
 	void handleInput(SwitchInput input)
 	{
 		if (input == SwitchInput::PUSH)
@@ -39,7 +32,7 @@ public:
 				index = 0;
 			else
 			{
-				values[index]->flush();
+				state->flush(); // Flush confirmed dirty changes
 				index = -1;
 			}
 		}

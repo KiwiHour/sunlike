@@ -1,3 +1,6 @@
+#ifndef SMART_BULB_ADAPTER
+#define SMART_BULB_ADAPTER
+
 #include <Arduino.h>
 #include "core/tapo/tapo-core.cpp"
 
@@ -15,15 +18,15 @@ private:
 	}
 
 public:
-	SmartBulbAdapter()
-	{
-		prevMillis = millis();
-		core = new L530("192.168.1.111");
-	}
-
 	~SmartBulbAdapter()
 	{
 		delete core;
+	}
+
+	void begin()
+	{
+		prevMillis = millis();
+		core = new L530("192.168.1.111");
 	}
 
 	void tick()
@@ -82,3 +85,5 @@ public:
 		return errorCodeToBool(core->setSaturation(saturation));
 	}
 };
+
+#endif
