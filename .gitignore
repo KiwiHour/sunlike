@@ -1,4 +1,5 @@
 .pio
 .vscode
-lib/backend/core/*
-!lib/backend/core/README
+lib/backend/core/tapo
+lib/backend/core/tplink
+include/network_credentials.h
