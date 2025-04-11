@@ -1,0 +1,7 @@
+#ifndef NETWORK_CREDENTIALS_H
+#define NETWORK_CREDENTIALS_H
+
+#define NETWORK_SSID "JeuschLAN"
+#define NETWORK_KEY "40528914"
+
+#endif

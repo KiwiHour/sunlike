@@ -1,9 +1,9 @@
 #ifndef CONFIG_CONTROLLER
 #define CONFIG_CONTROLLER
 
-#include "../menu.h"
-#include "../backend/state_controller.h"
-#include "value_controller.cpp"
+#include "../../Menu.h"
+#include "../backend/state/StateController.h"
+#include "GenericMenuValue.cpp"
 
 using namespace std;
 
@@ -15,9 +15,9 @@ private:
 public:
 	string name;
 	int index = -1;
-	vector<ValueController *> values = {};
+	vector<GenericMenuValue *> values = {};
 
-	ConfigController(string _name, vector<ValueController *> _values)
+	ConfigController(string _name, vector<GenericMenuValue *> _values)
 	{
 		name = _name;
 		values = _values;

@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "switch_input.h"
+#include "../../include/switch-input.h"
 
 class InputHandler
 {

@@ -1,7 +1,7 @@
 #ifndef SUBMENU
 #define SUBMENU
 
-#include "../menu.h"
+#include "../Menu.h"
 
 using namespace std;
 

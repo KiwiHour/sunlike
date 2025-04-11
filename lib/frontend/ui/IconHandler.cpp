@@ -2,7 +2,9 @@
 #include <Adafruit_GFX.h>
 #include <Arduino.h>
 #include <vector>
-#include "icons.h"
+
+#include "../../../include/icons.h"
+#include "../../../include/switch-input.h"
 
 using namespace std;
 
