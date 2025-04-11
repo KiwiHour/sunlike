@@ -4,14 +4,13 @@
 #include <Adafruit_SSD1306.h>
 #include <Wire.h>
 
-#include "../switch_input.h"
-#include "menu.h"
+#include "Menu.h"
 
 using namespace std;
 
 Adafruit_SSD1306 *Menu::screen = nullptr;
 
-Menu::Menu(string _title, Menu *_parent = nullptr)
+Menu::Menu(string _title, Menu *_parent)
 {
 	title = _title;
 	parent = _parent;

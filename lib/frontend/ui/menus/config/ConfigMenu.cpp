@@ -1,9 +1,9 @@
 #ifndef CONFIG_MENU
 #define CONFIG_MENU
 
-#include "../menu.h"
-#include "../backend/state_controller.h"
-#include "config_controller.cpp"
+#include "../../Menu.h"
+#include "../backend/state/StateController.h"
+#include "ConfigController.cpp"
 
 class ConfigMenu : public Menu
 {
@@ -45,11 +45,15 @@ public:
 			// Justify values to the righthand side
 			// PADDING = MAX_CHARS - SELECTOR CHAR (>) PADDING - CONTROLLER NAME SIZE - PADDING BETWEEN VALUES - SIZE OF VALUES
 			int paddingChars = 21 - 2 - controller->name.length() - (controller->values.size() - 1);
+			vector<string> formattedValues = {};
 
-			for (int i = 0; i < controller->values.size(); i++)
-				paddingChars -= controller->values[i]->getFormattedValue().length();
+			for (int j = 0; j < controller->values.size(); j++)
+				formattedValues.push_back(controller->values[j]->getFormattedValue());
 
-			for (int i = 0; i < paddingChars; i++)
+			for (int j = 0; j < controller->values.size(); j++)
+				paddingChars -= formattedValues[j].length();
+
+			for (int j = 0; j < paddingChars; j++)
 				screen->print(" ");
 
 			for (int j = 0; j < controller->values.size(); j++)
@@ -58,7 +62,7 @@ public:
 				if (i == index && j == controller->index)
 					screen->setTextColor(BLACK, WHITE);
 
-				screen->print(controller->values[j]->getFormattedValue().c_str());
+				screen->print(formattedValues[j].c_str());
 				screen->setTextColor(WHITE);
 
 				// Padding only for between values, not at the end
@@ -108,7 +112,13 @@ public:
 	virtual void onEnter()
 	{
 		// Refresh the state
-		state->fetch();
+		for (auto controller : controllers)
+		{
+			for (auto value : controller->values)
+			{
+				state->fetch(value->stateName);
+			}
+		}
 	}
 };
 

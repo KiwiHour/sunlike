@@ -2,7 +2,7 @@
 #define SMART_BULB_ADAPTER
 
 #include <Arduino.h>
-#include "core/tapo/tapo-core.cpp"
+#include "tapo/tapo-core.cpp"
 
 // Intermediate adapter to generalise functions for the rest of the program
 // You can change the method implementation to match your bulb API of choice
@@ -35,14 +35,22 @@ public:
 		prevMillis = millis();
 	}
 
-	bool turnOn()
+	// 0 for off, 1 for on
+	int getPowerState()
 	{
-		return core->turnOn();
+		return (int)(core->isOn());
 	}
 
-	bool turnOff()
+	bool setPowerState(int state)
 	{
-		return core->turnOff();
+		if (state == 1)
+			core->turnOn();
+		else if (state == 0)
+			core->turnOff();
+		else
+			return false;
+
+		return true;
 	}
 
 	int getBrightness()

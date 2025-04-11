@@ -4,12 +4,8 @@
 #include <Adafruit_SSD1306.h>
 #include <Wire.h>
 
-#include "menu.cpp"
-#include "menus/menu_endpoint.cpp"
-#include "menus/home.cpp"
-#include "menus/submenu.cpp"
-#include "menus/config_menu.cpp"
-#include "../switch_input.h"
+#include "../frontend/ui/menus/menus.h"
+#include "../../../include/switch-input.h"
 
 // Settings
 #define OLED_ADDR 0x3C
@@ -18,16 +14,6 @@
 #define OLED_RESET -1
 
 using namespace std;
-
-// TODO: remove
-
-int testVal = 69;
-bool testSetter(int x)
-{
-	testVal = x;
-	return true;
-}
-int testGetter() { return testVal; }
 
 class UI
 {
@@ -69,7 +55,6 @@ public:
 
 	void handleInput(SwitchInput input)
 	{
-
 		if (input == SwitchInput::NONE)
 			return;
 
@@ -87,7 +72,6 @@ public:
 				currentMenu = currentMenu->parent;
 			}
 		}
-
 		display();
 		screenOn = true;
 
@@ -140,10 +124,11 @@ private:
 	{
 		ConfigMenu *adjust = new ConfigMenu("Adjustments", home);
 
-		adjust->addControllers({
-			new ConfigController("Brightness", {new ValueController("brightness", 1, 100)}),
-
-		});
+		adjust->addControllers({new ConfigController("Power state", {new BoolMenuValue("bulb_power_state", "on", "off")})});
+		adjust->addControllers({new ConfigController("Brightness", {new GenericMenuValue("bulb_brightness", 1, 100, "%")})});
+		adjust->addControllers({new ConfigController("Color Temp", {new GenericMenuValue("bulb_color_temperature", 2500, 6500, "k")})});
+		adjust->addControllers({new ConfigController("Hue", {new GenericMenuValue("bulb_hue", 0, 360)})});
+		adjust->addControllers({new ConfigController("Saturation", {new GenericMenuValue("bulb_saturation", 1, 100, "%")})});
 
 		return adjust;
 	}
@@ -153,12 +138,28 @@ private:
 		SubMenu *config = new SubMenu("Config", home);
 
 		// Config submenus
-		SubMenu *sunriseConfig = new SubMenu("Sunrise", config);
-		SubMenu *sunsetConfig = new SubMenu("Sunset", config);
-		SubMenu *duskfallConfig = new SubMenu("Duskfall", config);
+		ConfigMenu *sunriseConfig = new ConfigMenu("Sunrise", config);
+		ConfigMenu *sunsetConfig = new ConfigMenu("Sunset", config);
+		ConfigMenu *duskfallConfig = new ConfigMenu("Duskfall", config);
 		config->addChildren({sunriseConfig, sunsetConfig, duskfallConfig});
 
 		// TODO: add ConfigMenus for each of these submenus (need duration and start time, maybe stuff like ending brightness and hue? prob not)
+		sunriseConfig->addControllers({
+			new ConfigController("Start time", {new TimeMenuValue("sunrise_start_hour", TimeUnit::HOUR),
+												new TimeMenuValue("sunrise_start_minute", TimeUnit::MINUTE)}),
+			new ConfigController("Duration", {new DurationMenuValue("sunrise_duration_hour", TimeUnit::HOUR, 0, 6),
+											  new DurationMenuValue("sunrise_duration_minute", TimeUnit::MINUTE, 0, 59)}),
+		});
+		sunsetConfig->addControllers({
+			new ConfigController("Start time", {new TimeMenuValue("sunset_start_hour", TimeUnit::HOUR),
+												new TimeMenuValue("sunset_start_minute", TimeUnit::MINUTE)}),
+			new ConfigController("Duration", {new DurationMenuValue("sunset_duration_hour", TimeUnit::HOUR, 0, 6),
+											  new DurationMenuValue("sunset_duration_minute", TimeUnit::MINUTE, 0, 59)}),
+		});
+		duskfallConfig->addControllers({
+			new ConfigController("Duration", {new DurationMenuValue("duskfall_duration_hour", TimeUnit::HOUR, 0, 2),
+											  new DurationMenuValue("duskfall_duration_minute", TimeUnit::MINUTE, 0, 59)}),
+		});
 
 		return config;
 	}

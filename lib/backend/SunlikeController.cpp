@@ -1,7 +1,7 @@
 #ifndef SUNLIKE_CONTROLLER
 #define SUNLIKE_CONTROLLER
 
-#include "core/smart_bulb_adapter.cpp"
+#include "core/SmartBulbAdapter.cpp"
 
 class SunlikeController
 {
@@ -16,9 +16,6 @@ public:
 
 	void tick(bool erm)
 	{
-		Serial.println("erm, what the tick?");
-		if (erm)
-			bulb->turnOff();
 	}
 };
 

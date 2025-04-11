@@ -5,7 +5,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-#include "../switch_input.h"
+#include "../../../include/switch-input.h"
 
 using namespace std;
 
@@ -25,7 +25,7 @@ public:
 	Menu *parent;
 	int index = 0;
 
-	Menu(string _title, Menu *_parent);
+	Menu(string _title, Menu *_parent = nullptr);
 	static void setScreen(Adafruit_SSD1306 *_screen);
 
 	void addChildren(vector<Menu *> _children);

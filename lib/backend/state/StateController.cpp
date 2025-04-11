@@ -1,4 +1,4 @@
-#include "state_controller.h"
+#include "StateController.h"
 
 StateController *state = new StateController();
 
@@ -8,6 +8,7 @@ Value *StateController::findValue(const std::string &name)
 	if (it != values.end())
 		return it->second;
 
+	Serial.printf("Couldn't find state with name '%s'\n", name.c_str());
 	return nullptr;
 }
 
@@ -20,6 +21,13 @@ void StateController::addValue(const std::string &name, Getter getter, Setter se
 {
 	Value *value = new Value(getter, setter);
 	addValue(name, value);
+}
+
+void StateController::addValue(const std::string &name, std::pair<Getter, Setter> getterAndSetterPair)
+{
+	Getter getter = getterAndSetterPair.first;
+	Setter setter = getterAndSetterPair.second;
+	addValue(name, getter, setter);
 }
 
 bool StateController::set(const std::string &name, int _value)
@@ -49,6 +57,11 @@ void StateController::fetch()
 	}
 }
 
+void StateController::fetch(const std::string &name)
+{
+	values[name]->fetch();
+}
+
 void StateController::flush()
 {
 	// Flush all modified values
@@ -57,4 +70,9 @@ void StateController::flush()
 		if (value.second->isModified())
 			value.second->flush();
 	}
+}
+
+void StateController::flush(const std::string &name)
+{
+	values[name]->flush();
 }

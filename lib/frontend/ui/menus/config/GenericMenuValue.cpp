@@ -1,25 +1,33 @@
-#ifndef VALUE_CONTROLLER
-#define VALUE_CONTROLLER
+#ifndef GENERIC_MENU_VALUE
+#define GENERIC_MENU_VALUE
 
-#include "../menu.h"
-#include "../backend/state_controller.h"
+#include "../frontend/ui/Menu.h"
+#include "../backend/state/StateController.h"
 
 typedef function<int()> Getter;
 typedef function<bool(int)> Setter;
 
-class ValueController
+enum class TimeUnit
+{
+	HOUR,
+	MINUTE,
+	SECOND,
+};
+
+class GenericMenuValue
 {
 public:
-	ValueController(const std::string &_name, int _minValue, int _maxValue, size_t _padSize = 0, char _padChar = '?')
+	std::string stateName;
+
+	GenericMenuValue(const std::string &_stateName, int _minValue, int _maxValue, string _unit = "")
 	{
-		name = _name;
+		stateName = _stateName;
 		minValue = _minValue;
 		maxValue = _maxValue;
-		padSize = _padSize;
-		padChar = _padChar;
+		unit = _unit;
 
 		// The constant number here is a scalar for how fast the value changes when holding an input
-		// Higher deltaRate means slower increase (stupid I know), so decreasing the constant number will speed up the rate
+		// Higher deltaRate means slower increase (stupid I know), so decreasing the numerator in the round function will speed up the rate
 		// Clamped between 1 and 6, anything higher than 8 proved to be a bit too slow even for small ranges
 		deltaRate = max(1, min(6, (int)round(225.0 / (maxValue - minValue))));
 	}
@@ -44,24 +52,14 @@ public:
 
 			int delta = (input == SwitchInput::UP || input == SwitchInput::HOLDING_UP) ? 1 : -1;
 
-			state->adjust(name, delta);
+			state->adjust(stateName, delta);
 			circularClamp();
 		}
 	}
 
-	string getFormattedValue()
+	virtual string getFormattedValue()
 	{
-		string str = to_string(getValue());
-		Serial.println(getValue());
-
-		// Pad if desired
-		if (padSize > 0)
-		{
-			if (str.length() < padSize)
-				str = string(padSize - str.length(), padChar) + str;
-		}
-
-		return str;
+		return to_string(getValue()) + unit;
 	}
 
 	void clamp()
@@ -82,25 +80,22 @@ public:
 		}
 	}
 
-private:
-	std::string name;
+protected:
 	int minValue;
 	int maxValue;
-
-	size_t padSize;
-	char padChar;
+	string unit;
 
 	int deltaRate;
 	int holdCount;
 
 	int getValue()
 	{
-		return state->get(name);
+		return state->get(stateName);
 	}
 
 	bool setValue(int value)
 	{
-		return state->set(name, value);
+		return state->set(stateName, value);
 	}
 };
 

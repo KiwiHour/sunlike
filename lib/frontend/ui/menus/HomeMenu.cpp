@@ -2,9 +2,9 @@
 #define HOME_MENU
 
 #include <vector>
-#include "../menu.h"
-#include "../icon_handler.cpp"
-#include "../icons.h"
+#include "../Menu.h"
+#include "../IconHandler.cpp"
+#include "../../../../include/icons.h"
 
 #define PADDING_X 4
 #define PADDING_Y 15

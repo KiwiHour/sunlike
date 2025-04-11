@@ -20,7 +20,6 @@ public:
 
 	void set(int _value)
 	{
-		Serial.printf("Setting to %d\n", _value);
 		if (value.first != _value)
 			value.second = true; // Mark as modified
 		value.first = _value;
@@ -31,7 +30,6 @@ public:
 	}
 	void adjust(int delta)
 	{
-		Serial.printf("Adjusted by %d\n", delta);
 		set(get() + delta);
 	}
 	bool isModified()
