@@ -26,7 +26,7 @@ public:
 	void begin()
 	{
 		prevMillis = millis();
-		core = new L530("192.168.1.111");
+		core = new L530("192.168.1.203");
 	}
 
 	void tick()

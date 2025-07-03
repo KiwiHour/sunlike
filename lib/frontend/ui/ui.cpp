@@ -63,6 +63,8 @@ public:
 			InputResponse response = currentMenu->handleInput(input);
 			if (response == InputResponse::GO_INTO)
 			{
+				// TODO: add a little loading screen perhaps?
+				// Just display a GIF maybe? if it takes longer than 500ms, if thats even possible idk
 				currentMenu = currentMenu->children[currentMenu->index];
 				currentMenu->index = 0;
 				currentMenu->onEnter();

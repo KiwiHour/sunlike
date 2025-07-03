@@ -6,8 +6,12 @@
 #include "../include/network-credentials.h"
 #include "../frontend/InputHandler.cpp"
 #include "../frontend/ui/UI.cpp"
-#include "../backend/SunlikeController.cpp"
+#include "../backend/worker/SunlikeWorker.cpp"
 #include "../backend/state/StateController.h"
+
+// TODO:
+// remove namespace std from everwhere
+// convert "#ifndef" to "#pragma once"
 
 using namespace std;
 
@@ -15,7 +19,7 @@ UI *ui;
 Preferences prefs;
 InputHandler inputHandler;
 SmartBulbAdapter *bulb;
-SunlikeController *sunlike;
+SunlikeWorker *sunlike;
 
 bool connectOverWiFi()
 {
@@ -121,7 +125,7 @@ void setup()
 
 	ui = new UI();
 	bulb = new SmartBulbAdapter();
-	sunlike = new SunlikeController(bulb);
+	sunlike = new SunlikeWorker(bulb);
 
 	buildState();
 
@@ -137,7 +141,7 @@ void loop()
 	ui->handleInput(input);
 	ui->tick();
 
-	// sunlike.tick(input == SwitchInput::PUSH);
+	// sunlike->tick();
 
 	delay(10);
 }
