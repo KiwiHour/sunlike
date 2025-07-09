@@ -18,7 +18,7 @@ public:
 	// Will run the assigned function upon being drawn
 	virtual void draw()
 	{
-		drawTitle();
+		drawHeader();
 		screen->println();
 
 		// Check function is assigned

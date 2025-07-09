@@ -32,9 +32,10 @@ public:
 	void clampIndex(int upper);
 
 	// Centered along the x-axis of the entire screen
-	int getCenteredXCoord(string text, int y);
+	int getCenteredXCoord(string text);
+	int getRightJustifiedXCoord(string text);
 
-	void drawTitle();
+	void drawHeader();
 	virtual void draw() = 0;
 	virtual InputResponse handleInput(SwitchInput input) = 0;
 	virtual void onIdle() = 0;

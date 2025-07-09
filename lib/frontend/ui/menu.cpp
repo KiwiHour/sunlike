@@ -26,17 +26,40 @@ void Menu::addChildren(vector<Menu *> _children)
 	children.insert(children.end(), _children.begin(), _children.end());
 }
 
-void Menu::drawTitle()
+void Menu::drawHeader()
 {
-	screen->setCursor(0, 0);
-	int title_x = getCenteredXCoord(title, 0);
+	int x, y = 0;
 
 	// Draw two times with an offset to give a "bold" look
-	screen->setCursor(title_x, 0);
+	// Draw the title
+	screen->setCursor(x, y);
+	screen->print(title.c_str());
+	screen->setCursor(x + 1, y);
 	screen->print(title.c_str());
 
-	screen->setCursor(title_x + 1, 0);
-	screen->print(title.c_str());
+	// Draw the time
+	struct tm timeInfo;
+	if (!getLocalTime(&timeInfo))
+	{
+		Serial.println("Failed to get time");
+		return;
+	}
+
+	std::string currentHour = std::to_string(timeInfo.tm_hour);
+	std::string currentMinute = std::to_string(timeInfo.tm_min);
+
+	if (timeInfo.tm_hour <= 9)
+		currentHour = "0" + currentHour;
+	if (timeInfo.tm_min <= 9)
+		currentMinute = "0" + currentMinute;
+
+	std::string currentTime = currentHour + ":" + currentMinute;
+	int rightJustifiedXCoord = getRightJustifiedXCoord(currentTime);
+
+	screen->setCursor(rightJustifiedXCoord, y);
+	screen->print(currentTime.c_str());
+	screen->setCursor(rightJustifiedXCoord - 1, y);
+	screen->print(currentTime.c_str());
 }
 
 void Menu::clampIndex(int upper)
@@ -47,10 +70,18 @@ void Menu::clampIndex(int upper)
 		index = 0;
 }
 
-int Menu::getCenteredXCoord(string text, int y0)
+int Menu::getCenteredXCoord(string text)
 {
-	int16_t x1, y1;
-	uint16_t textWidth, textHeight;
-	screen->getTextBounds(text.c_str(), screen->width(), y0, &x1, &y1, &textWidth, &textHeight);
+	int16_t x1, _1;
+	uint16_t textWidth, _2;
+	screen->getTextBounds(text.c_str(), screen->width(), 0, &x1, &_1, &textWidth, &_2);
 	return ((screen->width() - textWidth) / 2) - x1;
+}
+
+int Menu::getRightJustifiedXCoord(string text)
+{
+	int16_t _1, _2;
+	uint16_t textWidth, _3;
+	screen->getTextBounds(text.c_str(), 0, 0, &_1, &_2, &textWidth, &_3);
+	return screen->width() - textWidth;
 }

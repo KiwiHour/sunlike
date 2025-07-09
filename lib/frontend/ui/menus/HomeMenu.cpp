@@ -32,7 +32,7 @@ public:
 
 	virtual void draw()
 	{
-		drawTitle();
+		drawHeader();
 		for (int i = 0; i < icons.size(); i++)
 		{
 			icons[i]->draw();

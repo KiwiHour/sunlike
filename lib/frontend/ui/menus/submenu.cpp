@@ -12,7 +12,7 @@ public:
 
 	virtual void draw()
 	{
-		drawTitle();
+		drawHeader();
 		screen->print("\n");
 
 		for (int i = 0; i < children.size(); i++)

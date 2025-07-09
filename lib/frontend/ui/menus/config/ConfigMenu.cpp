@@ -15,7 +15,7 @@ public:
 
 	virtual void draw()
 	{
-		drawTitle();
+		drawHeader();
 		screen->print("\n");
 
 		// TODO: Draw the value(s) on the far right of the row, will need text bounds prob. delegate this to the controller me thinks
