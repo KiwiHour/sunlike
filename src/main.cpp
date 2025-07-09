@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <WiFi.h>
+#include <time.h>
 #include <Preferences.h>
 
 #include "../include/network-credentials.h"
@@ -56,7 +57,10 @@ bool isPreferenceKeyTooLong(string key)
 int getConfig(string key)
 {
 	if (isPreferenceKeyTooLong(key))
+	{
+		Serial.printf("Config key '%s' too long", key);
 		return -1;
+	}
 	prefs.begin("sunlike_config");
 	int res = prefs.getInt(key.c_str());
 	prefs.end();
@@ -66,7 +70,10 @@ int getConfig(string key)
 bool setConfig(string key, int v)
 {
 	if (isPreferenceKeyTooLong(key))
+	{
+		Serial.printf("Config key '%s' too long", key);
 		return false;
+	}
 	prefs.begin("sunlike_config");
 	bool success = prefs.putInt(key.c_str(), v);
 	prefs.end();
@@ -80,6 +87,20 @@ pair<function<int()>, function<bool(int)>> createConfigGetterAndSetter(string ke
 		bind(getConfig, key),
 		bind(setConfig, key, placeholders::_1),
 	};
+}
+
+void setupTime()
+{
+	int daylightOffset = (bool)(state->get("is_daylight_saving_time")) ? 3600 : 0;
+	configTime(0, daylightOffset, "pool.ntp.org");
+
+	struct tm timeInfo;
+	if (!getLocalTime(&timeInfo))
+	{
+		Serial.println("Failed to obtain time");
+		return;
+	}
+	Serial.println(&timeInfo, "%A, %B %d %Y %H:%M:%S");
 }
 
 void buildState()
@@ -100,20 +121,24 @@ void buildState()
 	// ######################
 
 	// Sunrise
-	state->addValue("sunrise_start_hour", createConfigGetterAndSetter("rise_hour"));
-	state->addValue("sunrise_start_minute", createConfigGetterAndSetter("rise_minute"));
-	state->addValue("sunrise_duration_hour", createConfigGetterAndSetter("rise_dur_min"));
-	state->addValue("sunrise_duration_minute", createConfigGetterAndSetter("rise_dur"));
+	state->addValue("sunrise_start_hour", createConfigGetterAndSetter("rise_hour"), true);
+	state->addValue("sunrise_start_minute", createConfigGetterAndSetter("rise_minute"), true);
+	state->addValue("sunrise_duration_hour", createConfigGetterAndSetter("rise_dur_min"), true);
+	state->addValue("sunrise_duration_minute", createConfigGetterAndSetter("rise_dur"), true);
 
 	// Sunset
-	state->addValue("sunset_start_hour", createConfigGetterAndSetter("set_hour"));
-	state->addValue("sunset_start_minute", createConfigGetterAndSetter("set_minute"));
-	state->addValue("sunset_duration_hour", createConfigGetterAndSetter("set_dur_hour"));
-	state->addValue("sunset_duration_minute", createConfigGetterAndSetter("set_dur_min"));
+	state->addValue("sunset_start_hour", createConfigGetterAndSetter("set_hour"), true);
+	state->addValue("sunset_start_minute", createConfigGetterAndSetter("set_minute"), true);
+	state->addValue("sunset_duration_hour", createConfigGetterAndSetter("set_dur_hour"), true);
+	state->addValue("sunset_duration_minute", createConfigGetterAndSetter("set_dur_min"), true);
 
 	// Duskfall
-	state->addValue("duskfall_duration_hour", createConfigGetterAndSetter("dusk_dur_hour"));
-	state->addValue("duskfall_duration_minute", createConfigGetterAndSetter("dusk_dur_min"));
+	state->addValue("duskfall_duration_hour", createConfigGetterAndSetter("dusk_dur_hour"), true);
+	state->addValue("duskfall_duration_minute", createConfigGetterAndSetter("dusk_dur_min"), true);
+
+	// Misc.
+	// because I'm lazy, you'll need to restart after updating the daylight offset, real-time updates would be a pain
+	state->addValue("is_daylight_saving_time", createConfigGetterAndSetter("is_dst"), true);
 }
 
 void setup()
@@ -128,6 +153,7 @@ void setup()
 	sunlike = new SunlikeWorker(bulb);
 
 	buildState();
+	setupTime();
 
 	bulb->begin();
 	inputHandler.begin();

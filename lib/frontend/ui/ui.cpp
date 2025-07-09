@@ -143,7 +143,8 @@ private:
 		ConfigMenu *sunriseConfig = new ConfigMenu("Sunrise", config);
 		ConfigMenu *sunsetConfig = new ConfigMenu("Sunset", config);
 		ConfigMenu *duskfallConfig = new ConfigMenu("Duskfall", config);
-		config->addChildren({sunriseConfig, sunsetConfig, duskfallConfig});
+		ConfigMenu *miscConfig = new ConfigMenu("Misc.", config);
+		config->addChildren({sunriseConfig, sunsetConfig, duskfallConfig, miscConfig});
 
 		// TODO: add ConfigMenus for each of these submenus (need duration and start time, maybe stuff like ending brightness and hue? prob not)
 		sunriseConfig->addControllers({
@@ -161,6 +162,9 @@ private:
 		duskfallConfig->addControllers({
 			new ConfigController("Duration", {new DurationMenuValue("duskfall_duration_hour", TimeUnit::HOUR, 0, 2),
 											  new DurationMenuValue("duskfall_duration_minute", TimeUnit::MINUTE, 0, 59)}),
+		});
+		miscConfig->addControllers({
+			new ConfigController("DST?", {new BoolMenuValue("is_daylight_saving_time", "Yes", "No")}),
 		});
 
 		return config;
