@@ -12,22 +12,25 @@ Value *StateController::findValue(const std::string &name)
 	return nullptr;
 }
 
-void StateController::addValue(const std::string &name, Value *value)
+void StateController::addValue(const std::string &name, Value *value, bool fetchNow)
 {
 	values[name] = value;
+
+	if (fetchNow)
+		fetch(name);
 }
 
-void StateController::addValue(const std::string &name, Getter getter, Setter setter)
+void StateController::addValue(const std::string &name, Getter getter, Setter setter, bool fetchNow)
 {
 	Value *value = new Value(getter, setter);
-	addValue(name, value);
+	addValue(name, value, fetchNow);
 }
 
-void StateController::addValue(const std::string &name, std::pair<Getter, Setter> getterAndSetterPair)
+void StateController::addValue(const std::string &name, std::pair<Getter, Setter> getterAndSetterPair, bool fetchNow)
 {
 	Getter getter = getterAndSetterPair.first;
 	Setter setter = getterAndSetterPair.second;
-	addValue(name, getter, setter);
+	addValue(name, getter, setter, fetchNow);
 }
 
 bool StateController::set(const std::string &name, int _value)

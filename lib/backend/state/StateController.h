@@ -10,9 +10,9 @@ typedef std::function<bool(int)> Setter;
 class StateController
 {
 public:
-	void addValue(const std::string &name, Value *value);
-	void addValue(const std::string &name, Getter getter, Setter setter);
-	void addValue(const std::string &name, std::pair<Getter, Setter> getterAndSetterPair);
+	void addValue(const std::string &name, Value *value, bool fetchNow = false);
+	void addValue(const std::string &name, Getter getter, Setter setter, bool fetchNow = false);
+	void addValue(const std::string &name, std::pair<Getter, Setter> getterAndSetterPair, bool fetchNow = false);
 
 	bool set(const std::string &name, int _value);
 	int get(const std::string &name);
