@@ -109,7 +109,6 @@ void buildState()
 	// #####    BULB    #####
 	// ######################
 
-	// Preference keys are max 15 characters, which is why some of the naming is weird
 	state->addValue("bulb_power_state", bind(&SmartBulbAdapter::getPowerState, bulb), bind(&SmartBulbAdapter::setPowerState, bulb, placeholders::_1));
 	state->addValue("bulb_brightness", bind(&SmartBulbAdapter::getBrightness, bulb), bind(&SmartBulbAdapter::setBrightness, bulb, placeholders::_1));
 	state->addValue("bulb_color_temperature", bind(&SmartBulbAdapter::getColorTemperature, bulb), bind(&SmartBulbAdapter::setColorTemperature, bulb, placeholders::_1));
@@ -120,25 +119,34 @@ void buildState()
 	// #####   CONFIG   #####
 	// ######################
 
-	// Sunrise
-	state->addValue("sunrise_start_hour", createConfigGetterAndSetter("rise_hour"), true);
-	state->addValue("sunrise_start_minute", createConfigGetterAndSetter("rise_minute"), true);
-	state->addValue("sunrise_duration_hour", createConfigGetterAndSetter("rise_dur_min"), true);
-	state->addValue("sunrise_duration_minute", createConfigGetterAndSetter("rise_dur"), true);
+	// Preference keys are max 15 characters, which is why some of the naming is weird
+	std::vector<std::pair<std::string, std::string>> stateNamePrefKeyPairs = {
+		// Sunrise
+		{"sunrise_start_hour", "rise_hour"},
+		{"sunrise_start_minute", "rise_minute"},
+		{"sunrise_duration_hour", "rise_dur_min"},
+		{"sunrise_duration_minute", "rise_dur"},
 
-	// Sunset
-	state->addValue("sunset_start_hour", createConfigGetterAndSetter("set_hour"), true);
-	state->addValue("sunset_start_minute", createConfigGetterAndSetter("set_minute"), true);
-	state->addValue("sunset_duration_hour", createConfigGetterAndSetter("set_dur_hour"), true);
-	state->addValue("sunset_duration_minute", createConfigGetterAndSetter("set_dur_min"), true);
+		// Sunset
+		{"sunset_start_hour", "set_hour"},
+		{"sunset_start_minute", "set_minute"},
+		{"sunset_duration_hour", "set_dur_hour"},
+		{"sunset_duration_minute", "set_dur_min"},
 
-	// Duskfall
-	state->addValue("duskfall_duration_hour", createConfigGetterAndSetter("dusk_dur_hour"), true);
-	state->addValue("duskfall_duration_minute", createConfigGetterAndSetter("dusk_dur_min"), true);
+		// Duskfall
+		{"duskfall_duration_hour", "dusk_dur_hour"},
+		{"duskfall_duration_minute", "dusk_dur_min"},
 
-	// Misc.
-	// because I'm lazy, you'll need to restart after updating the daylight offset, real-time updates would be a pain
-	state->addValue("is_daylight_saving_time", createConfigGetterAndSetter("is_dst"), true);
+		// Misc
+		// because I'm lazy, you'll need to restart after updating the daylight offset, real-time updates would be a pain
+		{"is_daylight_saving_time", "is_dst"},
+	};
+
+	for (auto [stateName, prefKey] : stateNamePrefKeyPairs)
+	{
+		state->addValue(stateName, createConfigGetterAndSetter(prefKey));
+		state->fetch(stateName); // Load newest value into state
+	}
 }
 
 void setup()
@@ -152,11 +160,12 @@ void setup()
 	bulb = new SmartBulbAdapter();
 	sunlike = new SunlikeWorker(bulb);
 
+	bulb->begin();
+	inputHandler.begin();
+
 	buildState();
 	setupTime();
 
-	bulb->begin();
-	inputHandler.begin();
 	ui->begin();
 }
 
