@@ -1,7 +1,0 @@
-#ifndef NETWORK_CREDENTIALS_H
-#define NETWORK_CREDENTIALS_H
-
-#define NETWORK_SSID "PLUSNET-XSC9GG"
-#define NETWORK_KEY "TgFrcVeFrgV7Vf"
-
-#endif
