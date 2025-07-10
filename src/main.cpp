@@ -145,8 +145,10 @@ void buildState()
 	for (auto [stateName, prefKey] : stateNamePrefKeyPairs)
 	{
 		state->addValue(stateName, createConfigGetterAndSetter(prefKey));
-		state->fetch(stateName); // Load newest value into state
 	}
+
+	// Fetch all the values to make the state up to date
+	state->fetch();
 }
 
 void setup()
