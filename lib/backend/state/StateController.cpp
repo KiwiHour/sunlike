@@ -46,7 +46,8 @@ int StateController::get(const std::string &name)
 }
 void StateController::adjust(const std::string &name, int delta)
 {
-	findValue(name)->adjust(delta);
+	int currentValue = get(name);
+	set(name, currentValue + delta);
 }
 
 void StateController::fetch()

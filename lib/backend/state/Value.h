@@ -15,7 +15,6 @@ public:
 
 	void set(int _value);
 	int get();
-	void adjust(int delta);
 	bool isModified();
 
 	// Updates the internal value with the given getter

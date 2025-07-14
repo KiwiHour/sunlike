@@ -12,10 +12,6 @@ int Value::get()
 	return value.first;
 }
 
-void Value::adjust(int delta)
-{
-	set(get() + delta);
-}
 bool Value::isModified()
 {
 	return value.second;
