@@ -39,7 +39,7 @@ bool connectOverWiFi()
 		delay(250);
 	}
 
-	Serial.println();
+	Serial.println("Connected");
 
 	return true;
 }
