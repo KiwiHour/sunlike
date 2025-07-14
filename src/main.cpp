@@ -2,7 +2,6 @@
 #include <Wire.h>
 #include <WiFi.h>
 #include <time.h>
-#include <Preferences.h>
 
 #include "utils.h"
 #include "network-credentials.h"
@@ -18,7 +17,6 @@
 using namespace std;
 
 UI *ui;
-Preferences prefs;
 InputHandler inputHandler;
 SmartBulbAdapter *bulb;
 SunlikeWorker *sunlike;
@@ -45,55 +43,11 @@ bool connectOverWiFi()
 	return true;
 }
 
-bool isPreferenceKeyTooLong(string key)
-{
-	if (key.length() > 15)
-	{
-		logfCritical("Preference key '%s' is longer than 15 characters, which isn't allowed\n", key.c_str());
-		return true;
-	}
-	return false;
-}
-
-int getConfig(string key)
-{
-	if (isPreferenceKeyTooLong(key))
-	{
-		logfCritical("Config key '%s' too long", key);
-		return -1;
-	}
-	prefs.begin("sunlike_config");
-	int res = prefs.getInt(key.c_str());
-	prefs.end();
-
-	return res;
-}
-bool setConfig(string key, int v)
-{
-	if (isPreferenceKeyTooLong(key))
-	{
-		logfCritical("Config key '%s' too long", key);
-		return false;
-	}
-	prefs.begin("sunlike_config");
-	bool success = prefs.putInt(key.c_str(), v);
-	prefs.end();
-
-	return success;
-}
-
-pair<function<int()>, function<bool(int)>> createConfigGetterAndSetter(string key)
-{
-	return {
-		bind(getConfig, key),
-		bind(setConfig, key, placeholders::_1),
-	};
-}
-
 void setupTime()
 {
 	int daylightOffset = (bool)(state->get("is_daylight_saving_time")) ? 3600 : 0;
 	configTime(0, daylightOffset, "pool.ntp.org");
+	logDebug("Time configured");
 
 	tm now = getCurrentTime();
 	char buffer[64];
@@ -148,6 +102,7 @@ void buildState()
 
 	// Fetch all the values to make the state up to date
 	state->fetch();
+	logDebug("State built and fetched");
 }
 
 void setup()
@@ -184,6 +139,7 @@ void setup()
 	setupTime();
 
 	ui->begin();
+	logDebug("Setup completed")
 }
 
 void loop()
