@@ -1,8 +1,7 @@
-#ifndef STATE_CONTROLLER
-#define STATE_CONTROLLER
+#pragma once
 
-#include "Value.cpp"
 #include <unordered_map>
+#include "Value.h"
 
 typedef std::function<int()> Getter;
 typedef std::function<bool(int)> Setter;
@@ -10,9 +9,9 @@ typedef std::function<bool(int)> Setter;
 class StateController
 {
 public:
-	void addValue(const std::string &name, Value *value, bool fetchNow = false);
-	void addValue(const std::string &name, Getter getter, Setter setter, bool fetchNow = false);
-	void addValue(const std::string &name, std::pair<Getter, Setter> getterAndSetterPair, bool fetchNow = false);
+	void addValue(const std::string &name, Value *value);
+	void addValue(const std::string &name, Getter getter, Setter setter);
+	void addValue(const std::string &name, std::pair<Getter, Setter> getterAndSetterPair);
 
 	bool set(const std::string &name, int _value);
 	int get(const std::string &name);
@@ -29,5 +28,3 @@ private:
 };
 
 extern StateController *state;
-
-#endif

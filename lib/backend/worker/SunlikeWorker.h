@@ -1,7 +1,6 @@
-#ifndef SUNLIKE_CONTROLLER
-#define SUNLIKE_CONTROLLER
+#pragma once
 
-#include "core/SmartBulbAdapter.cpp"
+#include "core/SmartBulbAdapter.h"
 #include "state/StateController.h"
 #include "directors/GenericDirector.h"
 
@@ -15,5 +14,3 @@ public:
 
 	void tick();
 };
-
-#endif

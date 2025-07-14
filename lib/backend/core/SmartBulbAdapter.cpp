@@ -1,138 +1,103 @@
-#ifndef SMART_BULB_ADAPTER
-#define SMART_BULB_ADAPTER
+#include "SmartBulbAdapter.h"
 
-#include <Arduino.h>
-#include "tapo/tapo-core.cpp"
-
-// Intermediate adapter to generalise functions for the rest of the program
-// You can change the method implementation to match your bulb API of choice
-
-static const std::string bulbIp = "192.168.1.203";
-
-class SmartBulbAdapter
+bool SmartBulbAdapter::errorCodeToBool(int errorCode)
 {
-private:
-	L530 *core;
-	unsigned long prevMillis;
+	return errorCode == 0;
+}
 
-	int freshSnapshotThreshold_ms = 1000;
-	unsigned long attributeSnapshotMillis;
-	ColorBulbAttributes attributeSnapshot;
+void SmartBulbAdapter::ensureSnapshotFreshness()
+{
+	if (!isSnapshotFresh())
+		createSnapshot();
+}
 
-	bool errorCodeToBool(int errorCode)
-	{
-		return errorCode == 0;
-	}
+void SmartBulbAdapter::createSnapshot()
+{
+	attributeSnapshot = core->getAttributes();
+	attributeSnapshotMillis = millis();
+}
 
-	// Creates new snapshot if newest one is "stale"
-	void ensureSnapshotFreshness()
-	{
-		if (!isSnapshotFresh())
-			createSnapshot();
-	}
+bool SmartBulbAdapter::isSnapshotFresh()
+{
+	return (millis() - attributeSnapshotMillis < freshSnapshotThreshold_ms);
+}
 
-	void createSnapshot()
-	{
-		attributeSnapshot = core->getAttributes();
-		attributeSnapshotMillis = millis();
-	}
+// Static
+bool SmartBulbAdapter::isDeviceOn()
+{
+	HTTPClient http;
+	http.begin(("http://" + bulbIp).c_str());
+	int responseCode = http.GET();
+	http.end();
 
-	bool isSnapshotFresh()
-	{
-		return (millis() - attributeSnapshotMillis < freshSnapshotThreshold_ms);
-	}
+	return responseCode == 200;
+}
 
-public:
-	~SmartBulbAdapter()
-	{
-		delete core;
-	}
+void SmartBulbAdapter::begin()
+{
+	prevMillis = millis();
+	core = new L530(bulbIp);
+}
 
-	// This should be verified before beginning
-	static bool isDeviceOn()
-	{
-		HTTPClient http;
-		http.begin(("http://" + bulbIp).c_str());
-		int responseCode = http.GET();
-		http.end();
+void SmartBulbAdapter::tick()
+{
+	core->incrementCookieAge(millis() - prevMillis);
+	prevMillis = millis();
+}
 
-		return responseCode == 200;
-	}
+int SmartBulbAdapter::getPowerState()
+{
+	ensureSnapshotFreshness();
+	return (int)(attributeSnapshot.powerState);
+}
+bool SmartBulbAdapter::setPowerState(int state)
+{
+	if (state == 1)
+		core->turnOn();
+	else if (state == 0)
+		core->turnOff();
+	else
+		return false;
 
-	void begin()
-	{
-		prevMillis = millis();
-		core = new L530(bulbIp);
-	}
+	return true;
+}
 
-	void tick()
-	{
-		core->incrementCookieAge(millis() - prevMillis);
-		prevMillis = millis();
-	}
+int SmartBulbAdapter::getBrightness()
+{
+	ensureSnapshotFreshness();
+	return attributeSnapshot.brightness;
+}
+bool SmartBulbAdapter::setBrightness(int brightness)
+{
+	return errorCodeToBool(core->setBrightness(brightness));
+}
 
-	// 0 for off, 1 for on
-	int getPowerState()
-	{
-		ensureSnapshotFreshness();
-		return (int)(attributeSnapshot.powerState);
-	}
+int SmartBulbAdapter::getColorTemperature()
+{
+	ensureSnapshotFreshness();
+	return attributeSnapshot.colorTemperature;
+}
+bool SmartBulbAdapter::setColorTemperature(int temperature)
+{
+	return errorCodeToBool(core->setColorTemperature(temperature));
+}
 
-	bool setPowerState(int state)
-	{
-		if (state == 1)
-			core->turnOn();
-		else if (state == 0)
-			core->turnOff();
-		else
-			return false;
+int SmartBulbAdapter::getHue()
+{
+	ensureSnapshotFreshness();
+	return attributeSnapshot.hue;
+}
+bool SmartBulbAdapter::setHue(int hue)
+{
+	return errorCodeToBool(core->setHue(hue));
+}
 
-		return true;
-	}
-
-	int getBrightness()
-	{
-		ensureSnapshotFreshness();
-		return attributeSnapshot.brightness;
-	}
-
-	bool setBrightness(int brightness)
-	{
-		return errorCodeToBool(core->setBrightness(brightness));
-	}
-
-	int getColorTemperature()
-	{
-		ensureSnapshotFreshness();
-		return attributeSnapshot.colorTemperature;
-	}
-
-	bool setColorTemperature(int temperature)
-	{
-		return errorCodeToBool(core->setColorTemperature(temperature));
-	}
-
-	int getHue()
-	{
-		ensureSnapshotFreshness();
-		return attributeSnapshot.hue;
-	}
-
-	bool setHue(int hue)
-	{
-		return errorCodeToBool(core->setHue(hue));
-	}
-
-	int getSaturation()
-	{
-		ensureSnapshotFreshness();
-		return attributeSnapshot.saturation;
-	}
-
-	bool setSaturation(int saturation)
-	{
-		return errorCodeToBool(core->setSaturation(saturation));
-	}
-};
-
-#endif
+int SmartBulbAdapter::getSaturation()
+{
+	ensureSnapshotFreshness();
+	return attributeSnapshot.saturation;
+}
+bool SmartBulbAdapter::setSaturation(int saturation)
+{
+	return errorCodeToBool(core->setSaturation(saturation));
+}
