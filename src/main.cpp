@@ -158,12 +158,28 @@ void setup()
 
 	connectOverWiFi();
 
+	while (true)
+	{
+		if (SmartBulbAdapter::isDeviceOn())
+		{
+			// Leave while loop, and continue rest of the setup
+			Serial.println("Verified bulb is on");
+			break;
+		}
+
+		Serial.println("Couldn't connect to bulb, is it turned off at the switch?");
+		delay(10000); // 10s
+	}
+
 	ui = new UI();
 	bulb = new SmartBulbAdapter();
 	sunlike = new SunlikeWorker(bulb);
 
 	bulb->begin();
 	inputHandler.begin();
+
+	// Let bulb and input handler settle
+	delay(1000);
 
 	buildState();
 	setupTime();

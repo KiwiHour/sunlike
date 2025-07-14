@@ -17,6 +17,9 @@
 
 // Intermediate adapter to generalise functions for the rest of the program
 // You can change the method implementation to match your bulb API of choice
+
+static const std::string bulbIp = "192.168.1.203";
+
 class SmartBulbAdapter
 {
 private:
@@ -56,10 +59,21 @@ public:
 		delete core;
 	}
 
+	// This should be verified before beginning
+	static bool isDeviceOn()
+	{
+		HTTPClient http;
+		http.begin(("http://" + bulbIp).c_str());
+		int responseCode = http.GET();
+		http.end();
+
+		return responseCode == 200;
+	}
+
 	void begin()
 	{
 		prevMillis = millis();
-		core = new L530("192.168.1.203");
+		core = new L530(bulbIp);
 	}
 
 	void tick()
