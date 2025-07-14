@@ -10,6 +10,23 @@
 #include "../backend/worker/SunlikeWorker.cpp"
 #include "../backend/state/StateController.h"
 
+#define DEBUG 1
+#define logCritical(message)        \
+	Serial.print(F("[CRITICAL] ")); \
+	Serial.println(message);
+#define logfCritical(message, var)  \
+	Serial.print(F("[CRITICAL] ")); \
+	Serial.printf(message, var);
+
+#if DEBUG == 1
+#define logDebug(message)        \
+	Serial.print(F("[DEBUG] ")); \
+	Serial.println(message);
+#define logfDebug(message, var)  \
+	Serial.print(F("[DEBUG] ")); \
+	Serial.printf(message, var);
+#endif
+
 // TODO:
 // remove namespace std from everwhere
 // convert "#ifndef" to "#pragma once"
@@ -33,7 +50,7 @@ bool connectOverWiFi()
 		Serial.print(".");
 		if (tries > 50)
 		{
-			Serial.println("\nFailed to connect");
+			logCritical("\nFailed to connect");
 			return false;
 		}
 		delay(250);
@@ -48,7 +65,7 @@ bool isPreferenceKeyTooLong(string key)
 {
 	if (key.length() > 15)
 	{
-		Serial.printf("Preference key '%s' is longer than 15 characters, which isn't allowed\n", key.c_str());
+		logfCritical("Preference key '%s' is longer than 15 characters, which isn't allowed\n", key.c_str());
 		return true;
 	}
 	return false;
@@ -58,7 +75,7 @@ int getConfig(string key)
 {
 	if (isPreferenceKeyTooLong(key))
 	{
-		Serial.printf("Config key '%s' too long", key);
+		logfCritical("Config key '%s' too long", key);
 		return -1;
 	}
 	prefs.begin("sunlike_config");
@@ -71,7 +88,7 @@ bool setConfig(string key, int v)
 {
 	if (isPreferenceKeyTooLong(key))
 	{
-		Serial.printf("Config key '%s' too long", key);
+		logfCritical("Config key '%s' too long", key);
 		return false;
 	}
 	prefs.begin("sunlike_config");
@@ -97,10 +114,14 @@ void setupTime()
 	struct tm timeInfo;
 	if (!getLocalTime(&timeInfo))
 	{
-		Serial.println("Failed to obtain time");
+		logCritical("Failed to obtain time");
 		return;
 	}
-	Serial.println(&timeInfo, "%A, %B %d %Y %H:%M:%S");
+
+	char buffer[64];
+	strftime(buffer, sizeof(buffer), "%A, %B %d %Y %H:%M:%S", &timeInfo);
+	std::string formattedTime = buffer;
+	logDebug(formattedTime.c_str());
 }
 
 void buildState()
@@ -163,11 +184,11 @@ void setup()
 		if (SmartBulbAdapter::isDeviceOn())
 		{
 			// Leave while loop, and continue rest of the setup
-			Serial.println("Verified bulb is on");
+			logDebug("Verified bulb is on");
 			break;
 		}
 
-		Serial.println("Couldn't connect to bulb, is it turned off at the switch?");
+		logCritical("Couldn't connect to bulb, is it turned off at the switch?");
 		delay(10000); // 10s
 	}
 
