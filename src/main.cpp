@@ -26,7 +26,7 @@ bool connectOverWiFi()
 		Serial.print(".");
 		if (tries > 50)
 		{
-			logCritical("\nFailed to connect");
+			logCritical("Failed to connect");
 			return false;
 		}
 		delay(250);
@@ -96,7 +96,7 @@ void buildState()
 
 	// Fetch all the values to make the state up to date
 	state->fetch();
-	logDebug("State built and fetched");
+	logDebug("State built");
 }
 
 void setup()

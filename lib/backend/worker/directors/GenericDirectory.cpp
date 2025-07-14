@@ -1,4 +1,5 @@
 #include "GenericDirector.h"
+#include "utils.h"
 
 std::pair<int, int> GenericDirector::getHoursMinutes()
 {
@@ -10,7 +11,7 @@ std::pair<int, int> GenericDirector::getHoursMinutes()
 
 	if (responseCode != 200)
 	{
-		Serial.println("Failed to get time using NTP");
+		logCritical("Failed to get time using NTP");
 		return {};
 	}
 
@@ -20,7 +21,7 @@ std::pair<int, int> GenericDirector::getHoursMinutes()
 
 	if (!response.contains("datetime"))
 	{
-		Serial.println("Missing data from NTP response");
+		logCritical("Missing data from NTP response");
 		return {};
 	}
 

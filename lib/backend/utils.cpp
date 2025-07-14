@@ -8,7 +8,7 @@ bool isPreferenceKeyTooLong(std::string key)
 {
 	if (key.length() > 15)
 	{
-		logCritical("Preference key '%s' is longer than 15 characters, which isn't allowed\n", key.c_str());
+		logCritical("Preference key '%s' is longer than 15 characters, which isn't allowed", key.c_str());
 		return true;
 	}
 	return false;
@@ -19,7 +19,7 @@ int getConfig(std::string key)
 	Preferences prefs;
 	if (isPreferenceKeyTooLong(key))
 	{
-		logCritical("Config key '%s' too long", key);
+		logCritical("Config key '%s' too long", key.c_str());
 		return -1;
 	}
 	prefs.begin("sunlike_config");
@@ -33,14 +33,14 @@ bool setConfig(std::string key, int v)
 	Preferences prefs;
 	if (isPreferenceKeyTooLong(key))
 	{
-		logCritical("Config key '%s' too long", key);
+		logCritical("Preference key '%s' too long", key.c_str());
 		return false;
 	}
 	prefs.begin("sunlike_config");
 	bool success = prefs.putInt(key.c_str(), v);
 	prefs.end();
 
-	logDebug("'%s' set to '%s'\n", key, v);
+	logDebug("Preference key '%s' set to '%d'", key.c_str(), v);
 	return success;
 }
 
