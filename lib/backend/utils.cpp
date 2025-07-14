@@ -2,10 +2,10 @@
 
 tm getCurrentTime()
 {
-	struct tm timeInfo;
+	tm timeInfo;
 	if (!getLocalTime(&timeInfo))
 	{
-		Serial.println("Failed to get time");
+		logCritical("Failed to get time");
 		return timeInfo;
 	}
 

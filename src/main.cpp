@@ -4,28 +4,12 @@
 #include <time.h>
 #include <Preferences.h>
 
-#include "../include/network-credentials.h"
+#include "utils.h"
+#include "network-credentials.h"
 #include "../frontend/InputHandler.cpp"
 #include "../frontend/ui/UI.cpp"
 #include "../backend/worker/SunlikeWorker.cpp"
 #include "../backend/state/StateController.h"
-
-#define DEBUG 1
-#define logCritical(message)        \
-	Serial.print(F("[CRITICAL] ")); \
-	Serial.println(message);
-#define logfCritical(message, var)  \
-	Serial.print(F("[CRITICAL] ")); \
-	Serial.printf(message, var);
-
-#if DEBUG == 1
-#define logDebug(message)        \
-	Serial.print(F("[DEBUG] ")); \
-	Serial.println(message);
-#define logfDebug(message, var)  \
-	Serial.print(F("[DEBUG] ")); \
-	Serial.printf(message, var);
-#endif
 
 // TODO:
 // remove namespace std from everwhere
@@ -111,15 +95,9 @@ void setupTime()
 	int daylightOffset = (bool)(state->get("is_daylight_saving_time")) ? 3600 : 0;
 	configTime(0, daylightOffset, "pool.ntp.org");
 
-	struct tm timeInfo;
-	if (!getLocalTime(&timeInfo))
-	{
-		logCritical("Failed to obtain time");
-		return;
-	}
-
+	tm now = getCurrentTime();
 	char buffer[64];
-	strftime(buffer, sizeof(buffer), "%A, %B %d %Y %H:%M:%S", &timeInfo);
+	strftime(buffer, sizeof(buffer), "%A, %B %d %Y %H:%M:%S", &now);
 	std::string formattedTime = buffer;
 	logDebug(formattedTime.c_str());
 }

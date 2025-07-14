@@ -4,6 +4,7 @@
 #include <Adafruit_SSD1306.h>
 #include <Wire.h>
 
+#include "utils.h"
 #include "Menu.h"
 
 using namespace std;
@@ -38,19 +39,13 @@ void Menu::drawHeader()
 	screen->print(title.c_str());
 
 	// Draw the time
-	struct tm timeInfo;
-	if (!getLocalTime(&timeInfo))
-	{
-		Serial.println("Failed to get time");
-		return;
-	}
+	tm now = getCurrentTime();
+	std::string currentHour = std::to_string(now.tm_hour);
+	std::string currentMinute = std::to_string(now.tm_min);
 
-	std::string currentHour = std::to_string(timeInfo.tm_hour);
-	std::string currentMinute = std::to_string(timeInfo.tm_min);
-
-	if (timeInfo.tm_hour <= 9)
+	if (now.tm_hour <= 9)
 		currentHour = "0" + currentHour;
-	if (timeInfo.tm_min <= 9)
+	if (now.tm_min <= 9)
 		currentMinute = "0" + currentMinute;
 
 	std::string currentTime = currentHour + ":" + currentMinute;
