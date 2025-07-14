@@ -1,35 +1,15 @@
-#ifndef TIME_MENU_VALUE
-#define TIME_MENU_VALUE
+#include "TimeMenuValue.h"
 
-#include "GenericMenuValue.cpp"
-
-class TimeMenuValue : public GenericMenuValue
+std::string TimeMenuValue::getFormattedValue()
 {
-public:
-	// max value is set to 23 if its for an hour unit, or 59 otherwise.
-	TimeMenuValue(const std::string &_stateName, TimeUnit unit) : GenericMenuValue(_stateName, 0, unit == TimeUnit::HOUR ? 23 : 59)
+	std::string str = std::to_string(getValue());
+
+	// Pad if desired
+	if (padSize > 0)
 	{
-		padSize = 2;
-		padChar = '0';
+		if (str.length() < padSize)
+			str = std::string(padSize - str.length(), padChar) + str;
 	}
 
-	virtual string getFormattedValue()
-	{
-		string str = to_string(getValue());
-
-		// Pad if desired
-		if (padSize > 0)
-		{
-			if (str.length() < padSize)
-				str = string(padSize - str.length(), padChar) + str;
-		}
-
-		return str;
-	}
-
-private:
-	size_t padSize;
-	char padChar;
-};
-
-#endif
+	return str;
+}

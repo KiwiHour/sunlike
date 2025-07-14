@@ -1,55 +1,26 @@
-#include <Adafruit_SSD1306.h>
-#include <Adafruit_GFX.h>
-#include <Arduino.h>
-#include <vector>
+#include "IconHandler.h"
 
-#include "../../../include/icons.h"
-#include "../../../include/switch-input.h"
-
-using namespace std;
-
-class IconHandler
+void IconHandler::draw()
 {
-public:
-	Icon icon;
+	screen->drawBitmap(x, y, bitmap.data(), 32, 32, WHITE);
+}
 
-	IconHandler(Adafruit_SSD1306 *_screen, Icon _icon, int _x, int _y)
+std::pair<int, int> IconHandler::getPos()
+{
+	return {x, y};
+}
+
+std::string IconHandler::getLabel()
+{
+	switch (icon)
 	{
-		icon = _icon;
-		screen = _screen;
-		bitmap = iconFrames[icon];
-		x = _x;
-		y = _y;
+	case FUNCTIONS:
+		return "Funcs";
+	case CONFIG:
+		return "Config";
+	case ADJUST:
+		return "Adjust";
+	default:
+		return "Unknown";
 	}
-
-	pair<int, int> getPos()
-	{
-		return {x, y};
-	}
-
-	void draw()
-	{
-		screen->drawBitmap(x, y, bitmap.data(), 32, 32, WHITE);
-	}
-
-	std::string getLabel()
-	{
-		switch (icon)
-		{
-		case FUNCTIONS:
-			return "Funcs";
-		case CONFIG:
-			return "Config";
-		case ADJUST:
-			return "Adjust";
-		default:
-			return "Unknown";
-		}
-	}
-
-private:
-	int x;
-	int y;
-	Adafruit_SSD1306 *screen;
-	array<byte, 128> bitmap;
-};
+}

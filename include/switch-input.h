@@ -1,5 +1,4 @@
-#ifndef SWITCH_INPUT_H
-#define SWITCH_INPUT_H
+#pragma once
 
 // TODO:
 // If i wanted to add the ability to hold down, I could make new enum values HOLDING_UP, HOLDING_DOWN, HOLDING_LEFT, HOLDING_RIGHT, HOLDING_PUSH
@@ -21,5 +20,3 @@ enum class SwitchInput
 	HOLDING_RIGHT,
 	HOLDING_LEFT
 };
-
-#endif

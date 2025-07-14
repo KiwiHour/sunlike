@@ -1,48 +1,32 @@
-#ifndef ENDPOINT
-#define ENDPOINT
+#include "MenuEndpoint.h"
 
-#include "../Menu.h"
-
-class MenuEndpoint : public Menu
+void MenuEndpoint::setFunction(std::function<bool()> _func)
 {
-public:
-	function<bool()> func = nullptr;
+	func = _func;
+}
 
-	using Menu::Menu;
+void MenuEndpoint::draw()
+{
+	drawHeader();
+	screen->println();
 
-	void setFunction(function<bool()> _func)
+	// Check function is assigned
+	if (func == nullptr)
 	{
-		func = _func;
+		screen->println("No function assigned :/");
+		return;
 	}
 
-	// Will run the assigned function upon being drawn
-	virtual void draw()
-	{
-		drawHeader();
-		screen->println();
+	bool success = func();
+	std::string message = success ? "Success :)" : "Failed :(";
 
-		// Check function is assigned
-		if (func == nullptr)
-		{
-			screen->println("No function assigned :/");
-			return;
-		}
+	screen->println(message.c_str());
+}
 
-		bool success = func();
-		string message = success ? "Success :)" : "Failed :(";
+InputResponse MenuEndpoint::handleInput(SwitchInput input)
+{
+	if (input == SwitchInput::LEFT || input == SwitchInput::PUSH)
+		return InputResponse::GO_BACK;
 
-		screen->println(message.c_str());
-	}
-
-	virtual InputResponse handleInput(SwitchInput input)
-	{
-		if (input == SwitchInput::LEFT || input == SwitchInput::PUSH)
-			return InputResponse::GO_BACK;
-
-		return InputResponse::STAY;
-	}
-
-	virtual void onIdle() {}
-};
-
-#endif
+	return InputResponse::STAY;
+}

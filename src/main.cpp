@@ -5,16 +5,10 @@
 
 #include "utils.h"
 #include "network-credentials.h"
-#include "../frontend/InputHandler.cpp"
-#include "../frontend/ui/UI.cpp"
-#include "../backend/worker/SunlikeWorker.cpp"
-#include "../backend/state/StateController.h"
-
-// TODO:
-// remove namespace std from everwhere
-// convert "#ifndef" to "#pragma once"
-
-using namespace std;
+#include "InputHandler.h"
+#include "ui/UI.h"
+#include "worker/SunlikeWorker.h"
+#include "state/StateController.h"
 
 UI *ui;
 InputHandler inputHandler;

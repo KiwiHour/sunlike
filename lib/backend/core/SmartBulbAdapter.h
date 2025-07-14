@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include <HTTPClient.h>
 #include "tapo/tapo-core.cpp"
 
 // Intermediate adapter to generalise functions for the rest of the program

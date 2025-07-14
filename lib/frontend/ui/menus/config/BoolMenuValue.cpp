@@ -1,30 +1,11 @@
-#ifndef BOOL_MENU_VALUE
-#define BOOL_MENU_VALUE
+#include "BoolMenuValue.h"
 
-#include "GenericMenuValue.cpp"
-
-class BoolMenuValue : public GenericMenuValue
+std::string BoolMenuValue::getFormattedValue()
 {
-public:
-	BoolMenuValue(const std::string &_stateName, string _trueString, string _falseString) : GenericMenuValue(_stateName, 0, 1)
+	if (getValue() == 0)
 	{
-		trueString = _trueString;
-		falseString = _falseString;
+		return falseString;
 	}
-
-	virtual string getFormattedValue()
-	{
-		if (getValue() == 0)
-		{
-			return falseString;
-		}
-		else
-			return trueString;
-	}
-
-private:
-	string trueString;
-	string falseString;
-};
-
-#endif
+	else
+		return trueString;
+}

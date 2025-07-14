@@ -7,11 +7,9 @@
 #include "utils.h"
 #include "Menu.h"
 
-using namespace std;
-
 Adafruit_SSD1306 *Menu::screen = nullptr;
 
-Menu::Menu(string _title, Menu *_parent)
+Menu::Menu(std::string _title, Menu *_parent)
 {
 	title = _title;
 	parent = _parent;
@@ -22,7 +20,7 @@ void Menu::setScreen(Adafruit_SSD1306 *_screen)
 	screen = _screen;
 }
 
-void Menu::addChildren(vector<Menu *> _children)
+void Menu::addChildren(std::vector<Menu *> _children)
 {
 	children.insert(children.end(), _children.begin(), _children.end());
 }
@@ -65,7 +63,7 @@ void Menu::clampIndex(int upper)
 		index = 0;
 }
 
-int Menu::getCenteredXCoord(string text)
+int Menu::getCenteredXCoord(std::string text)
 {
 	int16_t x1, _1;
 	uint16_t textWidth, _2;
@@ -73,7 +71,7 @@ int Menu::getCenteredXCoord(string text)
 	return ((screen->width() - textWidth) / 2) - x1;
 }
 
-int Menu::getRightJustifiedXCoord(string text)
+int Menu::getRightJustifiedXCoord(std::string text)
 {
 	int16_t _1, _2;
 	uint16_t textWidth, _3;

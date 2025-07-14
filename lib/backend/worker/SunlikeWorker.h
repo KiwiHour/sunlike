@@ -2,7 +2,7 @@
 
 #include "core/SmartBulbAdapter.h"
 #include "state/StateController.h"
-#include "directors/GenericDirector.h"
+#include "worker/directors/GenericDirector.h"
 
 class SunlikeWorker
 {

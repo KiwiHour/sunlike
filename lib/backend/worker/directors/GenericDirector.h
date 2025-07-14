@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <nlohmann/json.hpp>
+#include <Arduino.h>
 #include <HTTPClient.h>
 
 class GenericDirector
