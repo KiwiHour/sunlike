@@ -9,7 +9,11 @@ void ConfigController::handleInput(SwitchInput input)
 			index = 0;
 		else
 		{
-			state->flush(); // Flush confirmed dirty changes
+			for (GenericMenuValue *value : values)
+			{
+				state->flush(value->stateName); // Flush confirmed dirty changes
+			}
+
 			index = -1;
 		}
 	}
