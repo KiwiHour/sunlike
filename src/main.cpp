@@ -102,6 +102,7 @@ void buildState()
 void setup()
 {
 	Serial.begin(115200);
+	Serial.setDebugOutput((bool)DEBUG);
 	delay(2000);
 
 	connectOverWiFi();
