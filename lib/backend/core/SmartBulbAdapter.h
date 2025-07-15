@@ -2,7 +2,7 @@
 
 #include <Arduino.h>
 #include <HTTPClient.h>
-#include "tapo/tapo-core.cpp"
+#include "tapo/tapo-core.h"
 
 // Intermediate adapter to generalise functions for the rest of the program
 // You can change the method implementation to match your bulb API of choice

@@ -3,7 +3,8 @@
 #include <functional>
 #include <nlohmann/json.hpp>
 #include <Arduino.h>
-#include "core/tapo/tapo-core.cpp"
+#include "core/tapo/tapo-core.h"
+#include "state/StateController.h"
 
 class GenericDirector
 {
