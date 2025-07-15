@@ -38,6 +38,10 @@ public:
 	void begin();
 	void tick();
 
+	// <!!!>
+	// Getters and setters should never be used
+	// Only ever through the StateController
+
 	// 0 for off, 1 for on
 	int getPowerState();
 	bool setPowerState(int state);
