@@ -3,16 +3,22 @@
 #include <Arduino.h>
 
 #define DEBUG 1
-#define logCritical(message, ...)          \
-	Serial.print(F("[CRITICAL] "));        \
-	Serial.printf(message, ##__VA_ARGS__); \
-	Serial.println();
+#define logCritical(message, ...)              \
+	do                                         \
+	{                                          \
+		Serial.print(F("[CRITICAL] "));        \
+		Serial.printf(message, ##__VA_ARGS__); \
+		Serial.println();                      \
+	} while (0)
 
 #if DEBUG == 1
-#define logDebug(message, ...)             \
-	Serial.print(F("[DEBUG] "));           \
-	Serial.printf(message, ##__VA_ARGS__); \
-	Serial.println();
+#define logDebug(message, ...)                 \
+	do                                         \
+	{                                          \
+		Serial.print(F("[DEBUG] "));           \
+		Serial.printf(message, ##__VA_ARGS__); \
+		Serial.println();                      \
+	} while (0)
 #endif
 
 // Config management using preferences

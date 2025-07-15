@@ -143,7 +143,7 @@ void setup()
 	setupTime();
 
 	ui->begin();
-	logDebug("Setup completed")
+	logDebug("Setup completed");
 }
 
 void loop()
