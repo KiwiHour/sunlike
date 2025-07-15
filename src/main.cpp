@@ -131,7 +131,7 @@ void setup()
 
 	ui = new UI();
 	bulb = new SmartBulbAdapter();
-	sunlike = new SunlikeWorker(bulb);
+	sunlike = new SunlikeWorker();
 
 	bulb->begin();
 	inputHandler.begin();
@@ -146,6 +146,7 @@ void setup()
 	logDebug("Setup completed");
 }
 
+unsigned long previousMillis = millis();
 void loop()
 {
 	SwitchInput input = inputHandler.getInput();
@@ -153,7 +154,11 @@ void loop()
 	ui->handleInput(input);
 	ui->tick();
 
-	// sunlike->tick();
+	if (millis() - previousMillis > 1000)
+	{
+		previousMillis = millis();
+		sunlike->tick();
+	}
 
 	delay(10);
 }
