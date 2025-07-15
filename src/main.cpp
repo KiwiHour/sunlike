@@ -37,6 +37,22 @@ bool connectOverWiFi()
 	return true;
 }
 
+void verifyBulbIsOn()
+{
+	while (true)
+	{
+		if (SmartBulbAdapter::isDeviceOn())
+		{
+			// Leave while loop, and continue rest of the setup
+			logDebug("Verified bulb is on");
+			break;
+		}
+
+		logCritical("Couldn't connect to bulb, is it turned off at the switch?");
+		delay(10000); // 10s
+	}
+}
+
 void setupTime()
 {
 	int daylightOffset = (bool)(state->get("is_daylight_saving_time")) ? 3600 : 0;
@@ -105,20 +121,13 @@ void setup()
 	Serial.setDebugOutput((bool)DEBUG);
 	delay(2000);
 
-	connectOverWiFi();
-
-	while (true)
+	if (!connectOverWiFi())
 	{
-		if (SmartBulbAdapter::isDeviceOn())
-		{
-			// Leave while loop, and continue rest of the setup
-			logDebug("Verified bulb is on");
-			break;
-		}
-
-		logCritical("Couldn't connect to bulb, is it turned off at the switch?");
-		delay(10000); // 10s
+		// Surely a restart will fix it
+		ESP.restart();
+		return;
 	}
+	verifyBulbIsOn();
 
 	ui = new UI();
 	bulb = new SmartBulbAdapter();
