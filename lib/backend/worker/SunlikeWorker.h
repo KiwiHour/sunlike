@@ -18,9 +18,12 @@ private:
 public:
 	SunlikeWorker()
 	{
-		addDirector(new SunriseDirector());
+		directors.reserve(3);
+		directors.push_back(new SunriseDirector());
+		// TODO;
+		// directors.push_back(new SunsetDirector());
+		// directors.push_back(new DuskfallDirector());
 	}
 
 	void tick();
-	void addDirector(GenericDirector *director);
 };

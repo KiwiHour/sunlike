@@ -11,11 +11,6 @@ void SunlikeWorker::tick()
 	Serial.println(director->getProgress(), 5);
 }
 
-void SunlikeWorker::addDirector(GenericDirector *director)
-{
-	directors.push_back(director);
-}
-
 GenericDirector *SunlikeWorker::getMostRecentDirector()
 {
 	GenericDirector *mostRecentDirector = nullptr;
