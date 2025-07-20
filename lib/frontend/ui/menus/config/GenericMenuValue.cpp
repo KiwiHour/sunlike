@@ -20,7 +20,7 @@ void GenericMenuValue::handleInput(SwitchInput input)
 
 		int delta = (input == SwitchInput::UP || input == SwitchInput::HOLDING_UP) ? 1 : -1;
 
-		state->adjust(stateName, delta);
+		state.adjust(stateName, delta);
 		circularClamp();
 	}
 }
@@ -50,10 +50,10 @@ void GenericMenuValue::circularClamp()
 
 int GenericMenuValue::getValue()
 {
-	return state->get(stateName);
+	return state.get(stateName);
 }
 
 bool GenericMenuValue::setValue(int value)
 {
-	return state->set(stateName, value);
+	return state.set(stateName, value);
 }

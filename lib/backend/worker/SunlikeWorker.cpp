@@ -17,13 +17,13 @@ GenericDirector *SunlikeWorker::getMostRecentDirector()
 	tm now = getCurrentTime();
 
 	// Aim is to find the director with the lowest time "elapsed"/time since last started
-	for (GenericDirector *director : directors)
+	for (const auto &director : directors)
 	{
 		if (
 			mostRecentDirector == nullptr ||
 			director->getSecondsElapsed() < mostRecentDirector->getSecondsElapsed())
 		{
-			mostRecentDirector = director;
+			mostRecentDirector = director.get();
 		}
 	}
 

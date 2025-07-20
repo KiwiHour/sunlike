@@ -12,7 +12,7 @@ static const std::string bulbIp = "192.168.1.203";
 class SmartBulbAdapter
 {
 private:
-	L530 *core;
+	L530 *core = nullptr; // Using pointer because the initialisation of the core needs to be delayed
 	unsigned long prevMillis;
 
 	int freshSnapshotThreshold_ms = 1000;

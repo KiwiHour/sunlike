@@ -16,8 +16,15 @@ void UI::begin()
 	screen->setTextColor(WHITE);
 	screen->clearDisplay();
 
+	Menu::setScreen(screen);
+	logDebug("Screen configured");
+
 	build();
+	logDebug("UI built");
+
 	display();
+	logDebug("Initial display successful");
+
 	lastInputMillis = millis();
 }
 

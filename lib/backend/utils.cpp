@@ -4,7 +4,7 @@
 #include <Preferences.h>
 #include "utils.h"
 
-bool isPreferenceKeyTooLong(std::string key)
+bool isPreferenceKeyTooLong(const std::string &key)
 {
 	if (key.length() > 15)
 	{
@@ -14,7 +14,7 @@ bool isPreferenceKeyTooLong(std::string key)
 	return false;
 }
 
-int getConfig(std::string key)
+int getConfig(const std::string &key)
 {
 	Preferences prefs;
 	if (isPreferenceKeyTooLong(key))
@@ -28,7 +28,7 @@ int getConfig(std::string key)
 
 	return res;
 }
-bool setConfig(std::string key, int v)
+bool setConfig(const std::string &key, int v)
 {
 	Preferences prefs;
 	if (isPreferenceKeyTooLong(key))
@@ -44,7 +44,7 @@ bool setConfig(std::string key, int v)
 	return success;
 }
 
-std::pair<std::function<int()>, std::function<bool(int)>> createConfigGetterAndSetter(std::string key)
+std::pair<std::function<int()>, std::function<bool(int)>> createConfigGetterAndSetter(const std::string &key)
 {
 	return {
 		bind(getConfig, key),

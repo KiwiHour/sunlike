@@ -10,10 +10,10 @@
 #include "worker/SunlikeWorker.h"
 #include "state/StateController.h"
 
-UI *ui;
+UI ui;
 InputHandler inputHandler;
-SmartBulbAdapter *bulb;
-SunlikeWorker *sunlike;
+SmartBulbAdapter bulb;
+SunlikeWorker sunlike;
 
 bool connectOverWiFi()
 {
@@ -37,7 +37,7 @@ bool connectOverWiFi()
 	return true;
 }
 
-void verifyBulbIsOn()
+void waitUntilBulbOn()
 {
 	while (true)
 	{
@@ -55,7 +55,7 @@ void verifyBulbIsOn()
 
 void setupTime()
 {
-	int daylightOffset = (bool)(state->get("is_daylight_saving_time")) ? 3600 : 0;
+	int daylightOffset = (bool)(state.get("is_daylight_saving_time")) ? 3600 : 0;
 	configTime(0, daylightOffset, "pool.ntp.org");
 	logDebug("Time configured");
 
@@ -72,11 +72,11 @@ void buildState()
 	// #####    BULB    #####
 	// ######################
 
-	state->addValue("bulb_power_state", bind(&SmartBulbAdapter::getPowerState, bulb), bind(&SmartBulbAdapter::setPowerState, bulb, placeholders::_1));
-	state->addValue("bulb_brightness", bind(&SmartBulbAdapter::getBrightness, bulb), bind(&SmartBulbAdapter::setBrightness, bulb, placeholders::_1));
-	state->addValue("bulb_color_temperature", bind(&SmartBulbAdapter::getColorTemperature, bulb), bind(&SmartBulbAdapter::setColorTemperature, bulb, placeholders::_1));
-	state->addValue("bulb_hue", bind(&SmartBulbAdapter::getHue, bulb), bind(&SmartBulbAdapter::setHue, bulb, placeholders::_1));
-	state->addValue("bulb_saturation", bind(&SmartBulbAdapter::getSaturation, bulb), bind(&SmartBulbAdapter::setSaturation, bulb, placeholders::_1));
+	state.addValue("bulb_power_state", bind(&SmartBulbAdapter::getPowerState, &bulb), bind(&SmartBulbAdapter::setPowerState, &bulb, placeholders::_1));
+	state.addValue("bulb_brightness", bind(&SmartBulbAdapter::getBrightness, &bulb), bind(&SmartBulbAdapter::setBrightness, &bulb, placeholders::_1));
+	state.addValue("bulb_color_temperature", bind(&SmartBulbAdapter::getColorTemperature, &bulb), bind(&SmartBulbAdapter::setColorTemperature, &bulb, placeholders::_1));
+	state.addValue("bulb_hue", bind(&SmartBulbAdapter::getHue, &bulb), bind(&SmartBulbAdapter::setHue, &bulb, placeholders::_1));
+	state.addValue("bulb_saturation", bind(&SmartBulbAdapter::getSaturation, &bulb), bind(&SmartBulbAdapter::setSaturation, &bulb, placeholders::_1));
 
 	// ######################
 	// #####   CONFIG   #####
@@ -107,11 +107,11 @@ void buildState()
 
 	for (auto [stateName, prefKey] : stateNamePrefKeyPairs)
 	{
-		state->addValue(stateName, createConfigGetterAndSetter(prefKey));
+		state.addValue(stateName, createConfigGetterAndSetter(prefKey));
 	}
 
 	// Fetch all the values to make the state up to date
-	state->fetch();
+	state.fetch();
 	logDebug("State built");
 }
 
@@ -127,14 +127,12 @@ void setup()
 		ESP.restart();
 		return;
 	}
-	verifyBulbIsOn();
+	waitUntilBulbOn();
 
-	ui = new UI();
-	bulb = new SmartBulbAdapter();
-	sunlike = new SunlikeWorker();
-
-	bulb->begin();
+	bulb.begin();
+	logDebug("Bulb begun");
 	inputHandler.begin();
+	logDebug("Input handler begun");
 
 	// Let bulb and input handler settle
 	delay(1000);
@@ -142,7 +140,7 @@ void setup()
 	buildState();
 	setupTime();
 
-	ui->begin();
+	ui.begin();
 	logDebug("Setup completed");
 }
 
@@ -151,13 +149,13 @@ void loop()
 {
 	SwitchInput input = inputHandler.getInput();
 
-	ui->handleInput(input);
-	ui->tick();
+	ui.handleInput(input);
+	ui.tick();
 
 	if (millis() - previousMillis > 1000)
 	{
 		previousMillis = millis();
-		sunlike->tick();
+		sunlike.tick();
 	}
 
 	delay(10);

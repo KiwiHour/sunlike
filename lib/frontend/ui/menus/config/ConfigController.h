@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include "ui/Menu.h"
 #include "state/StateController.h"
 #include "GenericMenuValue.h"
@@ -12,9 +13,10 @@ private:
 public:
 	std::string name;
 	std::vector<GenericMenuValue *> values = {};
+
 	int index = -1;
 
-	ConfigController(std::string _name, std::vector<GenericMenuValue *> _values)
+	ConfigController(const std::string &_name, const std::vector<GenericMenuValue *> &_values)
 		: name(_name), values(_values) {}
 
 	void handleInput(SwitchInput input);

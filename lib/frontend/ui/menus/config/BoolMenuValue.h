@@ -6,7 +6,7 @@
 class BoolMenuValue : public GenericMenuValue
 {
 public:
-	BoolMenuValue(const std::string &_stateName, std::string _trueString, std::string _falseString)
+	BoolMenuValue(const std::string &_stateName, const std::string &_trueString, const std::string &_falseString)
 		: GenericMenuValue(_stateName, 0, 1), trueString(_trueString), falseString(_falseString) {}
 
 	virtual std::string getFormattedValue();

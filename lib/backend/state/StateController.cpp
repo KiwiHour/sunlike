@@ -1,33 +1,33 @@
 #include "StateController.h"
 #include "utils.h"
 
-StateController *state = new StateController();
+StateController g_state;
+StateController &state = g_state;
 
 Value *StateController::findValue(const std::string &name)
 {
 	auto it = values.find(name);
 	if (it != values.end())
-		return it->second;
+		return it->second.get(); // Raw pointer
 
 	logCritical("Couldn't find state with name '%s'", name.c_str());
 	return nullptr;
 }
 
-void StateController::addValue(const std::string &name, Value *value)
+void StateController::addValue(const std::string &name, std::unique_ptr<Value> value)
 {
-	values[name] = value;
+	values[name] = std::move(value);
 }
 
-void StateController::addValue(const std::string &name, Getter getter, Setter setter)
+void StateController::addValue(const std::string &name, const Getter &getter, const Setter &setter)
 {
-	Value *value = new Value(getter, setter);
-	addValue(name, value);
+	std::unique_ptr<Value> value = std::make_unique<Value>(getter, setter);
+	addValue(name, std::move(value));
 }
 
-void StateController::addValue(const std::string &name, std::pair<Getter, Setter> getterAndSetterPair)
+void StateController::addValue(const std::string &name, const std::pair<Getter, Setter> &getterAndSetterPair)
 {
-	Getter getter = getterAndSetterPair.first;
-	Setter setter = getterAndSetterPair.second;
+	const auto &[getter, setter] = getterAndSetterPair;
 	addValue(name, getter, setter);
 }
 
@@ -36,7 +36,10 @@ bool StateController::set(const std::string &name, int _value)
 	Value *value = findValue(name);
 
 	if (value == nullptr)
+	{
+		logCritical("Couldn't find value with name %s while trying to set it", name.c_str());
 		return false;
+	}
 
 	value->set(_value);
 	logDebug("State of '%s' set to '%d'", name.c_str(), _value);
@@ -45,7 +48,13 @@ bool StateController::set(const std::string &name, int _value)
 }
 int StateController::get(const std::string &name)
 {
-	return findValue(name)->get();
+	Value *value = findValue(name);
+	if (value == nullptr)
+	{
+		logCritical("Couldn't find value with name %s while trying to get it", name.c_str());
+		return 0;
+	}
+	return value->get();
 }
 void StateController::adjust(const std::string &name, int delta)
 {

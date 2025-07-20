@@ -44,7 +44,7 @@ void HomeMenu::onIdle()
 	index = 1;
 }
 
-void HomeMenu::drawIconLabel(std::string label, int x0, int y0, bool underline)
+void HomeMenu::drawIconLabel(const std::string &label, int x0, int y0, bool underline)
 {
 	int16_t x1, y1;
 	uint16_t width, height;

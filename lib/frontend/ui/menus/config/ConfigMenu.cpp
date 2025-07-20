@@ -103,7 +103,7 @@ void ConfigMenu::onEnter()
 	{
 		for (auto value : controller->values)
 		{
-			state->fetch(value->stateName);
+			state.fetch(value->stateName);
 		}
 	}
 }

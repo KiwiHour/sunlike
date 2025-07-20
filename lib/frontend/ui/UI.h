@@ -4,6 +4,7 @@
 #include <Adafruit_SSD1306.h>
 #include <Wire.h>
 
+#include "utils.h"
 #include "ui/menus/menus.h"
 #include "switch-input.h"
 

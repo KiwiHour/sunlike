@@ -11,7 +11,7 @@ typedef std::function<bool(int)> Setter;
 class Value
 {
 public:
-	Value(Getter _getter, Setter _setter) : getter(_getter), setter(_setter) {}
+	Value(const Getter &_getter, const Setter &_setter) : getter(_getter), setter(_setter) {}
 
 	void set(int _value);
 	int get();

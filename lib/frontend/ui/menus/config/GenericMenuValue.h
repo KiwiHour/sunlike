@@ -18,7 +18,7 @@ class GenericMenuValue
 public:
 	std::string stateName;
 
-	GenericMenuValue(const std::string &_stateName, int _minValue, int _maxValue, std::string _unit = "")
+	GenericMenuValue(const std::string &_stateName, int _minValue, int _maxValue, const std::string &_unit = "")
 		: stateName(_stateName), minValue(_minValue), maxValue(_maxValue), unit(_unit)
 	{
 		// The constant number here is a scalar for how fast the value changes when holding an input

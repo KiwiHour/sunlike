@@ -22,5 +22,5 @@ public:
 private:
 	std::vector<IconHandler *> icons = {};
 
-	void drawIconLabel(std::string label, int x0, int y0, bool underline);
+	void drawIconLabel(const std::string &label, int x0, int y0, bool underline);
 };

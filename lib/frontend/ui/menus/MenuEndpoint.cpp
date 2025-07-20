@@ -1,7 +1,8 @@
 #include "MenuEndpoint.h"
 
-void MenuEndpoint::setFunction(std::function<bool()> _func)
+void MenuEndpoint::setFunction(const std::function<bool()> &_func)
 {
+	// Copy function
 	func = _func;
 }
 

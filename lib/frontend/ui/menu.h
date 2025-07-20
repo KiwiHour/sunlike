@@ -25,12 +25,12 @@ public:
 	Menu(std::string _title, Menu *_parent = nullptr);
 	static void setScreen(Adafruit_SSD1306 *_screen);
 
-	void addChildren(std::vector<Menu *> _children);
+	void addChildren(const std::vector<Menu *> &_children);
 	void clampIndex(int upper);
 
 	// Centered along the x-axis of the entire screen
-	int getCenteredXCoord(std::string text);
-	int getRightJustifiedXCoord(std::string text);
+	int getCenteredXCoord(const std::string &text);
+	int getRightJustifiedXCoord(const std::string &text);
 
 	void drawHeader();
 	virtual void draw() = 0;

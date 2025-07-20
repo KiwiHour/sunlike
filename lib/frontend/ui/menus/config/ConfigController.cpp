@@ -9,9 +9,9 @@ void ConfigController::handleInput(SwitchInput input)
 			index = 0;
 		else
 		{
-			for (GenericMenuValue *value : values)
+			for (const auto value : values)
 			{
-				state->flush(value->stateName); // Flush confirmed dirty changes
+				state.flush(value->stateName); // Flush confirmed dirty changes
 			}
 
 			index = -1;

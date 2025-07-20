@@ -20,7 +20,7 @@ void Menu::setScreen(Adafruit_SSD1306 *_screen)
 	screen = _screen;
 }
 
-void Menu::addChildren(std::vector<Menu *> _children)
+void Menu::addChildren(const std::vector<Menu *> &_children)
 {
 	children.insert(children.end(), _children.begin(), _children.end());
 }
@@ -63,7 +63,7 @@ void Menu::clampIndex(int upper)
 		index = 0;
 }
 
-int Menu::getCenteredXCoord(std::string text)
+int Menu::getCenteredXCoord(const std::string &text)
 {
 	int16_t x1, _1;
 	uint16_t textWidth, _2;
@@ -71,7 +71,7 @@ int Menu::getCenteredXCoord(std::string text)
 	return ((screen->width() - textWidth) / 2) - x1;
 }
 
-int Menu::getRightJustifiedXCoord(std::string text)
+int Menu::getRightJustifiedXCoord(const std::string &text)
 {
 	int16_t _1, _2;
 	uint16_t textWidth, _3;

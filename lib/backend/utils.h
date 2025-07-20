@@ -22,10 +22,10 @@
 #endif
 
 // Config management using preferences
-int getConfig(std::string key);
-bool setConfig(std::string key, int value);
-bool isPreferenceKeyTooLong(std::string key);
-std::pair<std::function<int()>, std::function<bool(int)>> createConfigGetterAndSetter(std::string key);
+int getConfig(const std::string &key);
+bool setConfig(const std::string &key, int value);
+bool isPreferenceKeyTooLong(const std::string &key);
+std::pair<std::function<int()>, std::function<bool(int)>> createConfigGetterAndSetter(const std::string &key);
 
 // Uses the getLocalTime function from ESP library
 tm getCurrentTime();

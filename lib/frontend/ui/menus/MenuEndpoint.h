@@ -9,7 +9,7 @@ public:
 
 	std::function<bool()> func = nullptr;
 
-	void setFunction(std::function<bool()> _func);
+	void setFunction(const std::function<bool()> &_func);
 
 	// Will run the assigned function upon being drawn
 	virtual void draw();
