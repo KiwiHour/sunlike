@@ -2,7 +2,8 @@
 
 #include <Arduino.h>
 
-#define DEBUG 1
+#define DEBUG 1 // Enable debugging?
+
 #define logCritical(message, ...)              \
 	do                                         \
 	{                                          \
@@ -19,6 +20,8 @@
 		Serial.printf(message, ##__VA_ARGS__); \
 		Serial.println();                      \
 	} while (0)
+#else
+#define logDebug(message, ...)
 #endif
 
 // Config management using preferences
