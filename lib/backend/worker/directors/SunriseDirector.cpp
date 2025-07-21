@@ -1,11 +1,11 @@
 #include "SunriseDirector.h"
 
-std::pair<int, int> SunriseDirector::getStartTime()
+TimeHM SunriseDirector::getStartTime()
 {
 	return {state.get("sunrise_start_hour"), state.get("sunrise_start_minute")};
 }
 
-std::pair<int, int> SunriseDirector::getDuration()
+TimeHM SunriseDirector::getDuration()
 {
 	return {state.get("sunrise_duration_hour"), state.get("sunrise_duration_minute")};
 }
