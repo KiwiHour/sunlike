@@ -13,7 +13,7 @@ public:
 	using Menu::Menu;
 
 	virtual void draw();
-	void addControllers(std::vector<ConfigController *> _controllers);
+	void addControllers(const std::vector<ConfigController *> &_controllers);
 	virtual InputResponse handleInput(SwitchInput input);
 	virtual void onIdle();
 	virtual void onEnter();

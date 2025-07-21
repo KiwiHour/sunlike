@@ -61,7 +61,7 @@ void ConfigMenu::draw()
 	}
 }
 
-void ConfigMenu::addControllers(std::vector<ConfigController *> _controllers)
+void ConfigMenu::addControllers(const std::vector<ConfigController *> &_controllers)
 {
 	controllers.insert(controllers.end(), _controllers.begin(), _controllers.end());
 }
@@ -99,9 +99,9 @@ void ConfigMenu::onIdle()
 void ConfigMenu::onEnter()
 {
 	// Refresh the state
-	for (auto controller : controllers)
+	for (const auto controller : controllers)
 	{
-		for (auto value : controller->values)
+		for (const auto value : controller->values)
 		{
 			state.fetch(value->stateName);
 		}

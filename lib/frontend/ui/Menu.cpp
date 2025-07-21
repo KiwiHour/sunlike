@@ -1,19 +1,6 @@
-#include <vector>
-#include <Arduino.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
-#include <Wire.h>
-
-#include "utils.h"
 #include "Menu.h"
 
 Adafruit_SSD1306 *Menu::screen = nullptr;
-
-Menu::Menu(std::string _title, Menu *_parent)
-{
-	title = _title;
-	parent = _parent;
-}
 
 void Menu::setScreen(Adafruit_SSD1306 *_screen)
 {

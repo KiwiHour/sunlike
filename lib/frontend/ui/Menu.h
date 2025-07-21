@@ -1,8 +1,15 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include <Arduino.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include <Wire.h>
+
+#include "utils.h"
 
 #include "switch-input.h"
 
@@ -22,7 +29,8 @@ public:
 	Menu *parent;
 	int index = 0;
 
-	Menu(std::string _title, Menu *_parent = nullptr);
+	Menu(const std::string &_title, Menu *_parent = nullptr)
+		: title(_title), parent(_parent) {}
 	static void setScreen(Adafruit_SSD1306 *_screen);
 
 	void addChildren(const std::vector<Menu *> &_children);

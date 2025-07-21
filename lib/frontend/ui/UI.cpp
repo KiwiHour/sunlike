@@ -82,7 +82,6 @@ void UI::handleInput(SwitchInput input)
 
 void UI::build()
 {
-	Menu::setScreen(screen);
 
 	HomeMenu *home = new HomeMenu("Sunlike");
 	home->buildIcons();
