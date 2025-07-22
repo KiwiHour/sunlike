@@ -2,7 +2,7 @@
 
 #include "GenericDirector.h"
 
-class SunriseDirector : public GenericDirector
+class SunsetDirector : public GenericDirector
 {
 public:
 	using GenericDirector::GenericDirector;
@@ -11,6 +11,6 @@ public:
 	ColorBulbAttributes getBulbState() override;
 	std::string getName() override
 	{
-		return "sunrise";
+		return "sunset";
 	}
 };

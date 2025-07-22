@@ -17,10 +17,14 @@ TimeHM GenericDirector::getDuration()
 	};
 }
 
-int GenericDirector::getSecondsElapsed()
+std::optional<int> GenericDirector::getSecondsElapsed()
 {
 	tm now = getCurrentTime();
 	auto [startHour, startMinute] = getStartTime();
+
+	// Used for when start time hasn't been decided yet
+	if (startHour == -1 && startMinute == -1)
+		return std::nullopt;
 
 	int now_s = (now.tm_hour * 60 * 60) + (now.tm_min * 60) + now.tm_sec;
 	int start_s = (startHour * 60 * 60) + (startMinute * 60);
@@ -36,14 +40,20 @@ float GenericDirector::getProgress()
 	tm now = getCurrentTime();
 
 	int totalDuration_s = (durationHour * 60 * 60) + (durationMinute * 60);
-	int elapsed_s = getSecondsElapsed();
+	std::optional<int> elapsed_s = getSecondsElapsed();
+
+	if (!elapsed_s.has_value())
+	{
+		logCritical("Director getProgress was called when the elapsed seconds is null (most likely calling DuskfallDirector without setting the start time)");
+		return 0;
+	}
 
 	// Log on debug level just in case it is a mistake
 	if (totalDuration_s <= 0)
 		logDebug("The total duration of a director is 0");
 
-	if (elapsed_s > totalDuration_s)
+	if (elapsed_s.value() > totalDuration_s)
 		return 1.0f; // Finished, cap it
 
-	return (float)elapsed_s / totalDuration_s;
+	return (float)elapsed_s.value() / totalDuration_s;
 }

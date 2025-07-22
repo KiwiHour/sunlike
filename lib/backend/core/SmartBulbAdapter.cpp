@@ -48,7 +48,7 @@ void SmartBulbAdapter::tick()
 int SmartBulbAdapter::getPowerState()
 {
 	ensureSnapshotFreshness();
-	return (int)(attributeSnapshot.powerState);
+	return (int)(attributeSnapshot.powerState.value());
 }
 bool SmartBulbAdapter::setPowerState(int state)
 {
@@ -65,7 +65,7 @@ bool SmartBulbAdapter::setPowerState(int state)
 int SmartBulbAdapter::getBrightness()
 {
 	ensureSnapshotFreshness();
-	return attributeSnapshot.brightness;
+	return attributeSnapshot.brightness.value();
 }
 bool SmartBulbAdapter::setBrightness(int brightness)
 {
@@ -75,7 +75,7 @@ bool SmartBulbAdapter::setBrightness(int brightness)
 int SmartBulbAdapter::getColorTemperature()
 {
 	ensureSnapshotFreshness();
-	return attributeSnapshot.colorTemperature;
+	return attributeSnapshot.colorTemperature.value();
 }
 bool SmartBulbAdapter::setColorTemperature(int temperature)
 {
@@ -85,7 +85,7 @@ bool SmartBulbAdapter::setColorTemperature(int temperature)
 int SmartBulbAdapter::getHue()
 {
 	ensureSnapshotFreshness();
-	return attributeSnapshot.hue;
+	return attributeSnapshot.hue.value();
 }
 bool SmartBulbAdapter::setHue(int hue)
 {
@@ -95,7 +95,7 @@ bool SmartBulbAdapter::setHue(int hue)
 int SmartBulbAdapter::getSaturation()
 {
 	ensureSnapshotFreshness();
-	return attributeSnapshot.saturation;
+	return attributeSnapshot.saturation.value();
 }
 bool SmartBulbAdapter::setSaturation(int saturation)
 {

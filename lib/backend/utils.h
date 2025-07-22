@@ -27,6 +27,7 @@
 // Config management using preferences
 int getConfig(const std::string &key);
 bool setConfig(const std::string &key, int value);
+bool isPreferenceKey(const std::string &key);
 bool isPreferenceKeyTooLong(const std::string &key);
 std::pair<std::function<int()>, std::function<bool(int)>> createConfigGetterAndSetter(const std::string &key);
 

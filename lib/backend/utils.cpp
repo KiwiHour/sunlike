@@ -4,6 +4,18 @@
 #include <Preferences.h>
 #include "utils.h"
 
+const std::string PREFERENCE_NAME = "sunlike_config";
+
+bool isPreferenceKey(const std::string &key)
+{
+	Preferences prefs;
+	prefs.begin(PREFERENCE_NAME.c_str());
+	bool isKey = prefs.isKey(key.c_str());
+	prefs.end();
+
+	return isKey;
+}
+
 bool isPreferenceKeyTooLong(const std::string &key)
 {
 	if (key.length() > 15)
@@ -22,7 +34,7 @@ int getConfig(const std::string &key)
 		logCritical("Config key '%s' too long", key.c_str());
 		return -1;
 	}
-	prefs.begin("sunlike_config");
+	prefs.begin(PREFERENCE_NAME.c_str());
 	int res = prefs.getInt(key.c_str());
 	prefs.end();
 
@@ -36,7 +48,7 @@ bool setConfig(const std::string &key, int v)
 		logCritical("Preference key '%s' too long", key.c_str());
 		return false;
 	}
-	prefs.begin("sunlike_config");
+	prefs.begin(PREFERENCE_NAME.c_str());
 	bool success = prefs.putInt(key.c_str(), v);
 	prefs.end();
 

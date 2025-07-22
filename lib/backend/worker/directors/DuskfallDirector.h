@@ -2,15 +2,16 @@
 
 #include "GenericDirector.h"
 
-class SunriseDirector : public GenericDirector
+class DuskfallDirector : public GenericDirector
 {
 public:
 	using GenericDirector::GenericDirector;
 
 	float getProgress();
 	ColorBulbAttributes getBulbState() override;
+	void onExit() override;
 	std::string getName() override
 	{
-		return "sunrise";
+		return "duskfall";
 	}
 };

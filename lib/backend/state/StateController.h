@@ -33,6 +33,8 @@ namespace StateName
 
 	namespace Duskfall
 	{
+		inline const std::string StartHour = "duskfall_start_hour";
+		inline const std::string StartMinute = "duskfall_start_minute";
 		inline const std::string DurationHour = "duskfall_duration_hour";
 		inline const std::string DurationMinute = "duskfall_duration_minute";
 	}

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <optional>
 #include <nlohmann/json.hpp>
 #include <Arduino.h>
 #include "core/tapo/tapo-core.h"
@@ -30,7 +31,10 @@ public:
 	// Uses the getProgress method to produce the current bulb state
 	virtual ColorBulbAttributes getBulbState() = 0;
 	// Gets seconds since the director started (ignoring duration/end times)
-	int getSecondsElapsed();
+	std::optional<int> getSecondsElapsed();
+	virtual void onExit() {}
+	virtual void onEnter() {}
+	virtual std::string getName() = 0;
 
 	// Returns value from 0.0 to 1.0 based on how far through the light scene is
 	// Which is then transformed by the specific director to fit how the light's rate of change should be

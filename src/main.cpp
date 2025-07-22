@@ -99,6 +99,8 @@ void buildState()
 		{StateName::Sunset::DurationMinute, "set_dur_min"},
 
 		// Duskfall
+		{StateName::Duskfall::StartHour, "dusk_hour"},
+		{StateName::Duskfall::StartMinute, "dusk_min"},
 		{StateName::Duskfall::DurationHour, "dusk_dur_hour"},
 		{StateName::Duskfall::DurationMinute, "dusk_dur_min"},
 
@@ -111,6 +113,18 @@ void buildState()
 	for (auto [stateName, prefKey] : stateNamePrefKeyPairs)
 	{
 		state.addValue(stateName, createConfigGetterAndSetter(prefKey));
+	}
+
+	// Setup unique situtation of the duskfall start time
+	// If it's first time, the duskfall start time is 0,0 which will cause problems
+	// For first time, set them as -1,-1 (not usable until user triggers duskfall)
+	if (!isPreferenceKey("dusk_hour") || !isPreferenceKey("dusk_min"))
+	{
+		state.set(StateName::Duskfall::StartHour, -1);
+		state.set(StateName::Duskfall::StartMinute, -1);
+
+		state.flush(StateName::Duskfall::StartHour);
+		state.flush(StateName::Duskfall::StartMinute);
 	}
 
 	// Fetch all the values to make the state up to date

@@ -1,46 +1,74 @@
 #include "SunlikeWorker.h"
 
+void SunlikeWorker::maybeSetAndFlush(const std::string &stateName, std::optional<int> value)
+{
+	if (value.has_value() && value.value() != state.get(stateName))
+	{
+		state.set(stateName, value.value());
+		state.flush(stateName);
+	}
+}
+
 void SunlikeWorker::tick()
 {
-	GenericDirector *director = getMostRecentDirector();
+	if (currentDirector == nullptr)
+	{
+		logCritical("Current director somehow nullptr");
+		return;
+	}
 
-	// If there are no directors, or in manual override mode, or bulb is off
-	// Don't do anything
 	if (
-		director == nullptr ||
 		state.get(StateName::Misc::IsManualOverride) == 1 ||
 		state.get(StateName::Bulb::PowerState) == 0)
 	{
 		return;
 	}
 
-	int goalBrightness = director->getBulbState().brightness;
+	// Guard clauses passed, begin logic
 
-	if (goalBrightness != state.get(StateName::Bulb::Brightness))
+	GenericDirector *newDirectorCandidate = getNewDirector();
+
+	// If the new director is different, then we need to transition to the new one and trigger its onEnter function
+	if (currentDirector != newDirectorCandidate)
 	{
-		state.set(StateName::Bulb::Brightness, goalBrightness);
-		state.flush(StateName::Bulb::Brightness);
+		currentDirector->onExit();
+		currentDirector = newDirectorCandidate;
+		currentDirector->onEnter();
+		logDebug("Switched director to '%s'", currentDirector->getName().c_str());
 	}
+
+	ColorBulbAttributes newBulbState = currentDirector->getBulbState();
+
+	// Set all the values that have been explicitly set in the state
+	maybeSetAndFlush(StateName::Bulb::PowerState, newBulbState.powerState);
+	maybeSetAndFlush(StateName::Bulb::Brightness, newBulbState.brightness);
+	maybeSetAndFlush(StateName::Bulb::ColorTemperature, newBulbState.colorTemperature);
+	maybeSetAndFlush(StateName::Bulb::Hue, newBulbState.hue);
+	maybeSetAndFlush(StateName::Bulb::Saturation, newBulbState.saturation);
 }
 
-GenericDirector *SunlikeWorker::getMostRecentDirector()
+GenericDirector *SunlikeWorker::getNewDirector()
 {
-	GenericDirector *mostRecentDirector = nullptr;
-	tm now = getCurrentTime();
+
+	GenericDirector *candidateDirector = currentDirector;
+	int candidateSecondsElapsed = candidateDirector->getSecondsElapsed().value();
 
 	// Aim is to find the director with the lowest time "elapsed"/time since last started
 	for (const auto &director : directors)
 	{
-		if (
-			mostRecentDirector == nullptr ||
-			director->getSecondsElapsed() < mostRecentDirector->getSecondsElapsed())
+		// Don't compare against yourself
+		if (director.get() == candidateDirector)
+			continue;
+
+		std::optional<int> secondsElapsed = director->getSecondsElapsed();
+
+		// Check both elapsed seconds are valid (have a start time, then check for smallest one)
+		if ((secondsElapsed.has_value()) && secondsElapsed.value() < candidateSecondsElapsed)
 		{
-			mostRecentDirector = director.get();
+			candidateSecondsElapsed = secondsElapsed.value(); // Take the director we are looking at's seconds elapsed as the new one
+			candidateDirector = director.get();
 		}
 	}
 
-	if (mostRecentDirector == nullptr)
-		logCritical("No directors");
-
-	return mostRecentDirector;
+	return candidateDirector;
 }
