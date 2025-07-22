@@ -44,7 +44,7 @@ void waitUntilBulbOn()
 		if (SmartBulbAdapter::isDeviceOn())
 		{
 			// Leave while loop, and continue rest of the setup
-			logDebug("Verified bulb is on");
+			logDebug("Verified bulb has power");
 			break;
 		}
 
