@@ -158,10 +158,7 @@ void loop()
 	if (millis() - previousMillis > 1000)
 	{
 		previousMillis = millis();
-		if (state.get("is_manual_override") == 0)
-		{
-			sunlike.tick();
-		}
+		sunlike.tick();
 	}
 
 	delay(10);

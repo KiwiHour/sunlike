@@ -8,6 +8,9 @@ void SunlikeWorker::tick()
 	if (director == nullptr)
 		return;
 
+	if (state.get("is_manual_override") == 1)
+		return;
+
 	int goalBrightness = director->getBulbState().brightness;
 
 	if (goalBrightness != state.get("bulb_brightness"))
