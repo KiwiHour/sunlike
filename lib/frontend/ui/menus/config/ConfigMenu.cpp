@@ -104,6 +104,7 @@ void ConfigMenu::onEnter()
 		for (const auto value : controller->values)
 		{
 			state.fetch(value->stateName);
+			value->updateInternalValue();
 		}
 	}
 }

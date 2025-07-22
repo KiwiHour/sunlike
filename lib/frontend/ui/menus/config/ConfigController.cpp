@@ -11,7 +11,7 @@ void ConfigController::handleInput(SwitchInput input)
 		{
 			for (const auto value : values)
 			{
-				state.flush(value->stateName); // Flush confirmed dirty changes
+				value->setAndFlushInternalValue();
 			}
 
 			index = -1;

@@ -25,18 +25,24 @@ public:
 		// Higher deltaRate means slower increase (stupid I know), so decreasing the numerator in the round function will speed up the rate
 		// Clamped between 1 and 6, anything higher than 8 proved to be a bit too slow even for small ranges
 		deltaRate = max(1, min(6, (int)round(225.0 / (maxValue - minValue))));
+
+		updateInternalValue();
 	}
 
 	void handleInput(SwitchInput input);
 	virtual std::string getFormattedValue();
+	void setAndFlushInternalValue();
+	void updateInternalValue();
 
 	// Clamps values, but going below or under the limits causes it to loop back
 	void circularClamp();
 	void clamp();
 
 protected:
+	int internalValue;
 	int minValue;
 	int maxValue;
+	bool modified = false;
 	std::string unit;
 
 	int deltaRate;
@@ -44,4 +50,5 @@ protected:
 
 	int getValue();
 	bool setValue(int value);
+	bool adjustValue(int delta);
 };
