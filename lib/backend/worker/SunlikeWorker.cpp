@@ -16,7 +16,10 @@ void SunlikeWorker::tick()
 	if (goalBrightness != state.get("bulb_brightness"))
 	{
 		state.set("bulb_brightness", goalBrightness);
-		state.flush("bulb_brightness");
+
+		// Only flush if bulb already on (changing state automatically turns bulb on)
+		if (state.get("bulb_power_state") == 1)
+			state.flush("bulb_brightness");
 	}
 }
 
