@@ -4,22 +4,22 @@ void SunlikeWorker::tick()
 {
 	GenericDirector *director = getMostRecentDirector();
 
-	// Nothing to do...
-	if (director == nullptr)
+	// If there are no directors, or in manual override mode, or bulb is off
+	// Don't do anything
+	if (
+		director == nullptr ||
+		state.get("is_manual_override") == 1 ||
+		state.get("bulb_power_state") == 0)
+	{
 		return;
-
-	if (state.get("is_manual_override") == 1)
-		return;
+	}
 
 	int goalBrightness = director->getBulbState().brightness;
 
 	if (goalBrightness != state.get("bulb_brightness"))
 	{
 		state.set("bulb_brightness", goalBrightness);
-
-		// Only flush if bulb already on (changing state automatically turns bulb on)
-		if (state.get("bulb_power_state") == 1)
-			state.flush("bulb_brightness");
+		state.flush("bulb_brightness");
 	}
 }
 
