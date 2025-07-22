@@ -17,6 +17,7 @@ class GenericMenuValue
 {
 public:
 	std::string stateName;
+	int internalMenuValue;
 
 	GenericMenuValue(const std::string &_stateName, int _minValue, int _maxValue, const std::string &_unit = "")
 		: stateName(_stateName), minValue(_minValue), maxValue(_maxValue), unit(_unit)
@@ -25,10 +26,13 @@ public:
 		// Higher deltaRate means slower increase (stupid I know), so decreasing the numerator in the round function will speed up the rate
 		// Clamped between 1 and 6, anything higher than 8 proved to be a bit too slow even for small ranges
 		deltaRate = max(1, min(6, (int)round(225.0 / (maxValue - minValue))));
+
+		internalMenuValue = state.get(stateName);
 	}
 
 	void handleInput(SwitchInput input);
 	virtual std::string getFormattedValue();
+	void setAndFlushInternalValue();
 
 	// Clamps values, but going below or under the limits causes it to loop back
 	void circularClamp();
@@ -37,6 +41,7 @@ public:
 protected:
 	int minValue;
 	int maxValue;
+	bool modified = false;
 	std::string unit;
 
 	int deltaRate;
@@ -44,4 +49,5 @@ protected:
 
 	int getValue();
 	bool setValue(int value);
+	bool adjustValue(int delta);
 };
