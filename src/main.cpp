@@ -105,6 +105,7 @@ void buildState()
 		// Misc
 		// because I'm lazy, you'll need to restart after updating the daylight offset, real-time updates would be a pain
 		{"is_daylight_saving_time", "is_dst"},
+		{"is_manual_override", "is_manual_ovrd"},
 	};
 
 	for (auto [stateName, prefKey] : stateNamePrefKeyPairs)
@@ -157,7 +158,10 @@ void loop()
 	if (millis() - previousMillis > 1000)
 	{
 		previousMillis = millis();
-		sunlike.tick();
+		if (state.get("is_manual_override") == 0)
+		{
+			sunlike.tick();
+		}
 	}
 
 	delay(10);

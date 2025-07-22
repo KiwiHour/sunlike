@@ -151,6 +151,7 @@ Menu *UI::buildConfigMenu(Menu *home)
 	});
 	miscConfig->addControllers({
 		new ConfigController("DST?", {new BoolMenuValue("is_daylight_saving_time", "Yes", "No")}),
+		new ConfigController("Manual override", {new BoolMenuValue("is_manual_override", "On", "Off")}),
 	});
 
 	return config;
