@@ -38,8 +38,6 @@ float GenericDirector::getProgress()
 	int totalDuration_s = (durationHour * 60 * 60) + (durationMinute * 60);
 	int elapsed_s = getSecondsElapsed();
 
-	Serial.printf("start %d %d, dur %d %d, now %d %d, totaldur %d, elapsed %d\n", startHour, startMinute, durationHour, durationMinute, now.tm_hour, now.tm_min, totalDuration_s, elapsed_s);
-
 	// Log on debug level just in case it is a mistake
 	if (totalDuration_s <= 0)
 		logDebug("The total duration of a director is 0");

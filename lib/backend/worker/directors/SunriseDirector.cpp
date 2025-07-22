@@ -2,7 +2,11 @@
 
 ColorBulbAttributes SunriseDirector::getBulbState()
 {
-	return ColorBulbAttributes{};
+	ColorBulbAttributes attributes;
+
+	attributes.brightness = (int)std::round(getProgress() * 100.0);
+
+	return attributes;
 }
 
 float SunriseDirector::getProgress()

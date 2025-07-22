@@ -8,7 +8,13 @@ void SunlikeWorker::tick()
 	if (director == nullptr)
 		return;
 
-	Serial.println(director->getProgress(), 5);
+	int goalBrightness = director->getBulbState().brightness;
+
+	if (goalBrightness != state.get("bulb_brightness"))
+	{
+		state.set("bulb_brightness", goalBrightness);
+		state.flush("bulb_brightness");
+	}
 }
 
 GenericDirector *SunlikeWorker::getMostRecentDirector()

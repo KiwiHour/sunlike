@@ -72,6 +72,8 @@ void buildState()
 	// #####    BULB    #####
 	// ######################
 
+	// TODO: switch states to nested enums like (State::Bulb::PowerState)
+
 	state.addValue("bulb_power_state", bind(&SmartBulbAdapter::getPowerState, &bulb), bind(&SmartBulbAdapter::setPowerState, &bulb, placeholders::_1));
 	state.addValue("bulb_brightness", bind(&SmartBulbAdapter::getBrightness, &bulb), bind(&SmartBulbAdapter::setBrightness, &bulb, placeholders::_1));
 	state.addValue("bulb_color_temperature", bind(&SmartBulbAdapter::getColorTemperature, &bulb), bind(&SmartBulbAdapter::setColorTemperature, &bulb, placeholders::_1));
