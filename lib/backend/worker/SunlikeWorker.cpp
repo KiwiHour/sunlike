@@ -8,18 +8,18 @@ void SunlikeWorker::tick()
 	// Don't do anything
 	if (
 		director == nullptr ||
-		state.get("is_manual_override") == 1 ||
-		state.get("bulb_power_state") == 0)
+		state.get(StateName::Misc::IsManualOverride) == 1 ||
+		state.get(StateName::Bulb::PowerState) == 0)
 	{
 		return;
 	}
 
 	int goalBrightness = director->getBulbState().brightness;
 
-	if (goalBrightness != state.get("bulb_brightness"))
+	if (goalBrightness != state.get(StateName::Bulb::Brightness))
 	{
-		state.set("bulb_brightness", goalBrightness);
-		state.flush("bulb_brightness");
+		state.set(StateName::Bulb::Brightness, goalBrightness);
+		state.flush(StateName::Bulb::Brightness);
 	}
 }
 

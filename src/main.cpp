@@ -55,7 +55,7 @@ void waitUntilBulbOn()
 
 void setupTime()
 {
-	int daylightOffset = (bool)(state.get("is_daylight_saving_time")) ? 3600 : 0;
+	int daylightOffset = (bool)(state.get(StateName::Misc::IsDaylightSavingTime)) ? 3600 : 0;
 	configTime(0, daylightOffset, "pool.ntp.org");
 	logDebug("Time configured");
 
@@ -74,11 +74,11 @@ void buildState()
 
 	// TODO: switch states to nested enums like (State::Bulb::PowerState)
 
-	state.addValue("bulb_power_state", bind(&SmartBulbAdapter::getPowerState, &bulb), bind(&SmartBulbAdapter::setPowerState, &bulb, placeholders::_1));
-	state.addValue("bulb_brightness", bind(&SmartBulbAdapter::getBrightness, &bulb), bind(&SmartBulbAdapter::setBrightness, &bulb, placeholders::_1));
-	state.addValue("bulb_color_temperature", bind(&SmartBulbAdapter::getColorTemperature, &bulb), bind(&SmartBulbAdapter::setColorTemperature, &bulb, placeholders::_1));
-	state.addValue("bulb_hue", bind(&SmartBulbAdapter::getHue, &bulb), bind(&SmartBulbAdapter::setHue, &bulb, placeholders::_1));
-	state.addValue("bulb_saturation", bind(&SmartBulbAdapter::getSaturation, &bulb), bind(&SmartBulbAdapter::setSaturation, &bulb, placeholders::_1));
+	state.addValue(StateName::Bulb::PowerState, bind(&SmartBulbAdapter::getPowerState, &bulb), bind(&SmartBulbAdapter::setPowerState, &bulb, placeholders::_1));
+	state.addValue(StateName::Bulb::Brightness, bind(&SmartBulbAdapter::getBrightness, &bulb), bind(&SmartBulbAdapter::setBrightness, &bulb, placeholders::_1));
+	state.addValue(StateName::Bulb::ColorTemperature, bind(&SmartBulbAdapter::getColorTemperature, &bulb), bind(&SmartBulbAdapter::setColorTemperature, &bulb, placeholders::_1));
+	state.addValue(StateName::Bulb::Hue, bind(&SmartBulbAdapter::getHue, &bulb), bind(&SmartBulbAdapter::setHue, &bulb, placeholders::_1));
+	state.addValue(StateName::Bulb::Saturation, bind(&SmartBulbAdapter::getSaturation, &bulb), bind(&SmartBulbAdapter::setSaturation, &bulb, placeholders::_1));
 
 	// ######################
 	// #####   CONFIG   #####
@@ -87,25 +87,25 @@ void buildState()
 	// Preference keys are max 15 characters, which is why some of the naming is weird
 	std::vector<std::pair<std::string, std::string>> stateNamePrefKeyPairs = {
 		// Sunrise
-		{"sunrise_start_hour", "rise_hour"},
-		{"sunrise_start_minute", "rise_minute"},
-		{"sunrise_duration_hour", "rise_dur_min"},
-		{"sunrise_duration_minute", "rise_dur"},
+		{StateName::Sunrise::StartHour, "rise_hour"},
+		{StateName::Sunrise::StartMinute, "rise_minute"},
+		{StateName::Sunrise::DurationHour, "rise_dur_min"},
+		{StateName::Sunrise::DurationMinute, "rise_dur"},
 
 		// Sunset
-		{"sunset_start_hour", "set_hour"},
-		{"sunset_start_minute", "set_minute"},
-		{"sunset_duration_hour", "set_dur_hour"},
-		{"sunset_duration_minute", "set_dur_min"},
+		{StateName::Sunset::StartHour, "set_hour"},
+		{StateName::Sunset::StartMinute, "set_minute"},
+		{StateName::Sunset::DurationHour, "set_dur_hour"},
+		{StateName::Sunset::DurationMinute, "set_dur_min"},
 
 		// Duskfall
-		{"duskfall_duration_hour", "dusk_dur_hour"},
-		{"duskfall_duration_minute", "dusk_dur_min"},
+		{StateName::Duskfall::DurationHour, "dusk_dur_hour"},
+		{StateName::Duskfall::DurationMinute, "dusk_dur_min"},
 
 		// Misc
 		// because I'm lazy, you'll need to restart after updating the daylight offset, real-time updates would be a pain
-		{"is_daylight_saving_time", "is_dst"},
-		{"is_manual_override", "is_manual_ovrd"},
+		{StateName::Misc::IsDaylightSavingTime, "is_dst"},
+		{StateName::Misc::IsManualOverride, "is_manual_ovrd"},
 	};
 
 	for (auto [stateName, prefKey] : stateNamePrefKeyPairs)
