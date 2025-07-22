@@ -1,6 +1,22 @@
 #include "GenericDirector.h"
 #include "utils.h"
 
+TimeHM GenericDirector::getStartTime()
+{
+	return {
+		state.get(stateTimePrefix + "_start_hour"),
+		state.get(stateTimePrefix + "_start_minute"),
+	};
+}
+
+TimeHM GenericDirector::getDuration()
+{
+	return {
+		state.get(stateTimePrefix + "_duration_hour"),
+		state.get(stateTimePrefix + "_duration_minute"),
+	};
+}
+
 int GenericDirector::getSecondsElapsed()
 {
 	tm now = getCurrentTime();

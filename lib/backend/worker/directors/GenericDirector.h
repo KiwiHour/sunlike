@@ -16,17 +16,21 @@ struct TimeHM
 
 class GenericDirector
 {
+private:
+	std::string stateTimePrefix;
+
+protected:
+	TimeHM getStartTime();
+	TimeHM getDuration();
+
 public:
+	GenericDirector(const std::string &_stateTimePrefix)
+		: stateTimePrefix(_stateTimePrefix) {}
+
 	// Uses the getProgress method to produce the current bulb state
 	virtual ColorBulbAttributes getBulbState() = 0;
 	// Gets seconds since the director started (ignoring duration/end times)
 	int getSecondsElapsed();
-
-	// Hours and minutes
-	virtual TimeHM getStartTime() = 0;
-
-	// Hours and minutes
-	virtual TimeHM getDuration() = 0;
 
 	// Returns value from 0.0 to 1.0 based on how far through the light scene is
 	// Which is then transformed by the specific director to fit how the light's rate of change should be

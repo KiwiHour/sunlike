@@ -19,7 +19,7 @@ public:
 	SunlikeWorker()
 	{
 		directors.reserve(3);
-		directors.push_back(std::make_unique<SunriseDirector>());
+		directors.push_back(std::make_unique<SunriseDirector>("sunrise"));
 		// TODO:
 		// directors.push_back(new SunsetDirector());
 		// directors.push_back(new DuskfallDirector());

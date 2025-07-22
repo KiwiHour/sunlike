@@ -5,8 +5,8 @@
 class SunriseDirector : public GenericDirector
 {
 public:
+	using GenericDirector::GenericDirector;
+
 	float getProgress();
 	ColorBulbAttributes getBulbState() override;
-	TimeHM getStartTime() override;
-	TimeHM getDuration() override;
 };
