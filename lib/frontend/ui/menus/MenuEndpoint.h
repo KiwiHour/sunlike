@@ -4,10 +4,11 @@
 
 class MenuEndpoint : public Menu
 {
+private:
+	std::function<bool()> func = nullptr;
+
 public:
 	using Menu::Menu;
-
-	std::function<bool()> func = nullptr;
 
 	void setFunction(const std::function<bool()> &_func);
 

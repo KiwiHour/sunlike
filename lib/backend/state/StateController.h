@@ -63,8 +63,11 @@ public:
 
 	void fetch();
 	void fetch(const std::string &name);
-	void flush();
-	void flush(const std::string &name);
+	int fetchAndGet(const std::string &name);
+
+	bool flush();
+	bool flush(const std::string &name);
+	bool setAndFlush(const std::string &name, int _value);
 
 private:
 	std::unordered_map<std::string, std::unique_ptr<Value>> values;

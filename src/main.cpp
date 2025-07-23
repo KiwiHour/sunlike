@@ -120,11 +120,8 @@ void buildState()
 	// For first time, set them as -1,-1 (not usable until user triggers duskfall)
 	if (!isPreferenceKey("dusk_hour") || !isPreferenceKey("dusk_min"))
 	{
-		state.set(StateName::Duskfall::StartHour, -1);
-		state.set(StateName::Duskfall::StartMinute, -1);
-
-		state.flush(StateName::Duskfall::StartHour);
-		state.flush(StateName::Duskfall::StartMinute);
+		state.setAndFlush(StateName::Duskfall::StartHour, -1);
+		state.setAndFlush(StateName::Duskfall::StartMinute, -1);
 	}
 
 	// Fetch all the values to make the state up to date

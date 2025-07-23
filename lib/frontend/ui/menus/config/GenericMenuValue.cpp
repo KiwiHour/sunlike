@@ -78,6 +78,5 @@ void GenericMenuValue::setAndFlushInternalValue()
 		return;
 
 	modified = false;
-	state.set(stateName, getValue());
-	state.flush(stateName);
+	state.setAndFlush(stateName, getValue());
 }

@@ -4,8 +4,7 @@ void SunlikeWorker::maybeSetAndFlush(const std::string &stateName, std::optional
 {
 	if (value.has_value() && value.value() != state.get(stateName))
 	{
-		state.set(stateName, value.value());
-		state.flush(stateName);
+		state.setAndFlush(stateName, value.value());
 	}
 }
 

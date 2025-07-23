@@ -3,10 +3,8 @@
 void DuskfallDirector::onExit()
 {
 	// When duskfall finishes (aka moving onto sunrise) reset the time for the next duskfall
-	state.set(StateName::Duskfall::StartHour, -1);
-	state.set(StateName::Duskfall::StartMinute, -1);
-	state.flush(StateName::Duskfall::StartHour);
-	state.flush(StateName::Duskfall::StartMinute);
+	state.setAndFlush(StateName::Duskfall::StartHour, -1);
+	state.setAndFlush(StateName::Duskfall::StartMinute, -1);
 }
 
 float DuskfallDirector::getProgress() { return 0.0f; }

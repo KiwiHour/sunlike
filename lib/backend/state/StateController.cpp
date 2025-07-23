@@ -77,19 +77,40 @@ void StateController::fetch(const std::string &name)
 	logDebug("State of '%s' fetched", name.c_str());
 }
 
-void StateController::flush()
+int StateController::fetchAndGet(const std::string &name)
 {
+	fetch(name);
+	return get(name);
+}
+
+bool StateController::flush()
+{
+	bool success = true;
+
 	// Flush all modified values
 	for (auto &value : values)
 	{
 		if (value.second->isModified())
-			value.second->flush();
+		{
+			if (!value.second->flush())
+				;
+			success = false;
+		}
 	}
 	logDebug("Entire state flushed");
+
+	return success;
 }
 
-void StateController::flush(const std::string &name)
+bool StateController::flush(const std::string &name)
 {
-	values[name]->flush();
+	bool success = values[name]->flush();
 	logDebug("State of '%s' flushed", name.c_str());
+
+	return success;
+}
+
+bool StateController::setAndFlush(const std::string &name, int _value)
+{
+	return set(name, _value) && flush(name);
 }

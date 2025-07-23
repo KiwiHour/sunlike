@@ -101,6 +101,11 @@ Menu *UI::buildFunctionsMenu(Menu *home)
 
 	MenuEndpoint *startDuskfall = new MenuEndpoint("Start duskfall", functions);
 	MenuEndpoint *pauseSunset = new MenuEndpoint("Pause sunset", functions);
+
+	startDuskfall->setFunction([]()
+							   { state.setAndFlush(StateName::Bulb::Hue, 25);
+								return true; });
+
 	functions->addChildren({startDuskfall, pauseSunset});
 
 	return functions;
