@@ -102,7 +102,7 @@ Menu *UI::buildFunctionsMenu(Menu *home)
 	MenuEndpoint *startDuskfall = new MenuEndpoint("Start duskfall", functions);
 	MenuEndpoint *pauseSunset = new MenuEndpoint("Pause sunset", functions);
 
-	startDuskfall->setFunction([]()
+	startDuskfall->setFunction([](std::vector<int>)
 							   { state.setAndFlush(StateName::Bulb::Hue, 25);
 								return true; });
 
@@ -143,6 +143,7 @@ Menu *UI::buildConfigMenu(Menu *home)
 											new TimeMenuValue("sunrise_start_minute", TimeUnit::MINUTE)}),
 		new ConfigController("Duration", {new DurationMenuValue("sunrise_duration_hour", TimeUnit::HOUR, 0, 6),
 										  new DurationMenuValue("sunrise_duration_minute", TimeUnit::MINUTE, 0, 59)}),
+		new ConfigController("erm wts", {new DurationMenuValue(TimeUnit::MINUTE, 0, 59)}),
 	});
 	sunsetConfig->addControllers({
 		new ConfigController("Start time", {new TimeMenuValue("sunset_start_hour", TimeUnit::HOUR),

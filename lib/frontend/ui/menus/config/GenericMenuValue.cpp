@@ -68,13 +68,16 @@ bool GenericMenuValue::adjustValue(int delta)
 
 void GenericMenuValue::updateInternalValue()
 {
+	if (stateName.empty())
+		return;
+
 	modified = false;
 	internalValue = state.get(stateName);
 }
 
 void GenericMenuValue::setAndFlushInternalValue()
 {
-	if (!modified)
+	if (!modified || stateName.empty())
 		return;
 
 	modified = false;

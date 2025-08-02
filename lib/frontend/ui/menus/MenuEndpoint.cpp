@@ -1,11 +1,5 @@
 #include "MenuEndpoint.h"
 
-void MenuEndpoint::setFunction(const std::function<bool()> &_func)
-{
-	// Copy function
-	func = _func;
-}
-
 void MenuEndpoint::draw()
 {
 	drawHeader();
@@ -18,10 +12,10 @@ void MenuEndpoint::draw()
 		return;
 	}
 
-	bool success = func();
+	bool success = callFunction();
 	std::string message = success ? "Success :)" : "Failed :(";
-
 	screen->println(message.c_str());
+	return;
 }
 
 InputResponse MenuEndpoint::handleInput(SwitchInput input)

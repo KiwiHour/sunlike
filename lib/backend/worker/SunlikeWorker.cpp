@@ -2,7 +2,12 @@
 
 void SunlikeWorker::maybeSetAndFlush(const std::string &stateName, std::optional<int> value)
 {
-	if (value.has_value() && value.value() != state.get(stateName))
+	BulbMode bulbMode = static_cast<BulbMode>(state.get(StateName::Bulb::Mode));
+	bool differingBulbMode = ((stateName == StateName::Bulb::ColorTemperature && bulbMode != BulbMode::ColorTemperature) ||
+							  ((stateName == StateName::Bulb::Hue || stateName == StateName::Bulb::Saturation) && bulbMode != BulbMode::HueSaturation));
+
+	// If there is a value, and that value is different to the current one (aka, needs to change), or if the bulb mode differs (eg. in color temp mode when it should be in huesat)
+	if (value.has_value() && (differingBulbMode || value.value() != state.get(stateName)))
 	{
 		state.setAndFlush(stateName, value.value());
 	}

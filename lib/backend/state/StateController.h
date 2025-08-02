@@ -13,6 +13,7 @@ namespace StateName
 		inline const std::string ColorTemperature = "bulb_color_temperature";
 		inline const std::string Hue = "bulb_hue";
 		inline const std::string Saturation = "bulb_saturation";
+		inline const std::string Mode = "bulb_mode";
 	}
 
 	namespace Sunrise

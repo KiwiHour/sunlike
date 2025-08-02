@@ -4,7 +4,8 @@ ColorBulbAttributes SunriseDirector::getBulbState()
 {
 	ColorBulbAttributes attributes;
 
-	attributes.brightness = (int)std::round(getProgress() * 100.0);
+	attributes.brightness = (int)std::round(getProgress() * 100.0f);
+	attributes.colorTemperature = (int)std::round(getProgress() * 300.0f) + (2850 - 300);
 
 	return attributes;
 }

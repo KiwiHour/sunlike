@@ -45,6 +45,11 @@ void SmartBulbAdapter::tick()
 	prevMillis = millis();
 }
 
+int SmartBulbAdapter::getMode()
+{
+	return (int)currentMode;
+}
+
 int SmartBulbAdapter::getPowerState()
 {
 	ensureSnapshotFreshness();
@@ -79,6 +84,8 @@ int SmartBulbAdapter::getColorTemperature()
 }
 bool SmartBulbAdapter::setColorTemperature(int temperature)
 {
+	currentMode = BulbMode::ColorTemperature;
+	state.fetch(StateName::Bulb::Mode);
 	return errorCodeToBool(core->setColorTemperature(temperature));
 }
 
@@ -89,6 +96,8 @@ int SmartBulbAdapter::getHue()
 }
 bool SmartBulbAdapter::setHue(int hue)
 {
+	currentMode = BulbMode::HueSaturation;
+	state.fetch(StateName::Bulb::Mode);
 	return errorCodeToBool(core->setHue(hue));
 }
 
@@ -99,5 +108,7 @@ int SmartBulbAdapter::getSaturation()
 }
 bool SmartBulbAdapter::setSaturation(int saturation)
 {
+	currentMode = BulbMode::HueSaturation;
+	state.fetch(StateName::Bulb::Mode);
 	return errorCodeToBool(core->setSaturation(saturation));
 }

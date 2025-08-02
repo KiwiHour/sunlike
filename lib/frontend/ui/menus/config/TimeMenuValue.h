@@ -9,6 +9,9 @@ public:
 	TimeMenuValue(const std::string &_stateName, TimeUnit unit)
 		: GenericMenuValue(_stateName, 0, unit == TimeUnit::HOUR ? 23 : 59), padSize(2), padChar('0') {}
 
+	TimeMenuValue(TimeUnit unit)
+		: GenericMenuValue(0, unit == TimeUnit::HOUR ? 23 : 59), padSize(2), padChar('0') {}
+
 	virtual std::string getFormattedValue();
 
 private:

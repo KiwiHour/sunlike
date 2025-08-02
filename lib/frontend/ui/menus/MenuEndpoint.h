@@ -1,19 +1,33 @@
 #pragma once
 
 #include "ui/Menu.h"
+#include "config/ConfigMenu.h"
+#include "tuple"
 
 class MenuEndpoint : public Menu
 {
 private:
-	std::function<bool()> func = nullptr;
+	using Args = std::vector<int>;
+	using Func = std::function<bool(Args)>;
+	Func func = nullptr;
 
 public:
 	using Menu::Menu;
 
-	void setFunction(const std::function<bool()> &_func);
+	void setFunction(const Func &_func)
+	{
+		func = _func;
+	}
 
-	// Will run the assigned function upon being drawn
-	virtual void draw();
-	virtual InputResponse handleInput(SwitchInput input);
-	virtual void onIdle() {}
+	bool callFunction()
+	{
+		if (func == nullptr)
+			return false;
+
+		return true; // std::apply(func, params);
+	}
+
+	void draw();
+	InputResponse handleInput(SwitchInput input);
+	void onIdle() {}
 };

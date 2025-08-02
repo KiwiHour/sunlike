@@ -10,6 +10,13 @@
 #include "worker/SunlikeWorker.h"
 #include "state/StateController.h"
 
+// TODO:
+// Add parameters to the functions
+// Add pausing to the directors
+// Find a way to make brightness changes smoother - saturation -> hue -> brightness seem to be the priority in what causes different levels of 'brightness'
+// 		Figuring out how to link up brightness=x1, sat=y1, hue=z1 and brightness=x2, sat=y2, hue=z2 seems to be the answer
+//		Ideally I need to find where the "jumpy points" are, and just avoid them if possible, i think this happens when the brightness gets very low and the saturation is at a specific point
+
 UI ui;
 InputHandler inputHandler;
 SmartBulbAdapter bulb;
@@ -56,7 +63,7 @@ void waitUntilBulbOn()
 void setupTime()
 {
 	int daylightOffset = (bool)(state.get(StateName::Misc::IsDaylightSavingTime)) ? 3600 : 0;
-	configTime(0, daylightOffset, "pool.ntp.org");
+	configTime(0, daylightOffset, "pool.ntp.org"); // UTC-0
 	logDebug("Time configured");
 
 	tm now = getCurrentTime();
@@ -79,36 +86,39 @@ void buildState()
 	state.addValue(StateName::Bulb::ColorTemperature, bind(&SmartBulbAdapter::getColorTemperature, &bulb), bind(&SmartBulbAdapter::setColorTemperature, &bulb, placeholders::_1));
 	state.addValue(StateName::Bulb::Hue, bind(&SmartBulbAdapter::getHue, &bulb), bind(&SmartBulbAdapter::setHue, &bulb, placeholders::_1));
 	state.addValue(StateName::Bulb::Saturation, bind(&SmartBulbAdapter::getSaturation, &bulb), bind(&SmartBulbAdapter::setSaturation, &bulb, placeholders::_1));
+	state.addValue(StateName::Bulb::Mode, bind(&SmartBulbAdapter::getMode, &bulb), [](int)
+				   { return true; });
 
 	// ######################
 	// #####   CONFIG   #####
 	// ######################
 
 	// Preference keys are max 15 characters, which is why some of the naming is weird
-	std::vector<std::pair<std::string, std::string>> stateNamePrefKeyPairs = {
-		// Sunrise
-		{StateName::Sunrise::StartHour, "rise_hour"},
-		{StateName::Sunrise::StartMinute, "rise_minute"},
-		{StateName::Sunrise::DurationHour, "rise_dur_min"},
-		{StateName::Sunrise::DurationMinute, "rise_dur"},
+	std::vector<std::pair<std::string, std::string>>
+		stateNamePrefKeyPairs = {
+			// Sunrise
+			{StateName::Sunrise::StartHour, "rise_hour"},
+			{StateName::Sunrise::StartMinute, "rise_minute"},
+			{StateName::Sunrise::DurationHour, "rise_dur_min"},
+			{StateName::Sunrise::DurationMinute, "rise_dur"},
 
-		// Sunset
-		{StateName::Sunset::StartHour, "set_hour"},
-		{StateName::Sunset::StartMinute, "set_minute"},
-		{StateName::Sunset::DurationHour, "set_dur_hour"},
-		{StateName::Sunset::DurationMinute, "set_dur_min"},
+			// Sunset
+			{StateName::Sunset::StartHour, "set_hour"},
+			{StateName::Sunset::StartMinute, "set_minute"},
+			{StateName::Sunset::DurationHour, "set_dur_hour"},
+			{StateName::Sunset::DurationMinute, "set_dur_min"},
 
-		// Duskfall
-		{StateName::Duskfall::StartHour, "dusk_hour"},
-		{StateName::Duskfall::StartMinute, "dusk_min"},
-		{StateName::Duskfall::DurationHour, "dusk_dur_hour"},
-		{StateName::Duskfall::DurationMinute, "dusk_dur_min"},
+			// Duskfall
+			{StateName::Duskfall::StartHour, "dusk_hour"},
+			{StateName::Duskfall::StartMinute, "dusk_min"},
+			{StateName::Duskfall::DurationHour, "dusk_dur_hour"},
+			{StateName::Duskfall::DurationMinute, "dusk_dur_min"},
 
-		// Misc
-		// because I'm lazy, you'll need to restart after updating the daylight offset, real-time updates would be a pain
-		{StateName::Misc::IsDaylightSavingTime, "is_dst"},
-		{StateName::Misc::IsManualOverride, "is_manual_ovrd"},
-	};
+			// Misc
+			// because I'm lazy, you'll need to restart after updating the daylight offset, real-time updates would be a pain
+			{StateName::Misc::IsDaylightSavingTime, "is_dst"},
+			{StateName::Misc::IsManualOverride, "is_manual_ovrd"},
+		};
 
 	for (auto [stateName, prefKey] : stateNamePrefKeyPairs)
 	{

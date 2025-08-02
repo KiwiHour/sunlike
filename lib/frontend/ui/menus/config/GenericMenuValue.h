@@ -29,6 +29,13 @@ public:
 		updateInternalValue();
 	}
 
+	GenericMenuValue(int _minValue, int _maxValue, const std::string &_unit = "")
+		: GenericMenuValue("", _minValue, _maxValue, _unit)
+	{
+		// Initalise to the min value set
+		internalValue = minValue;
+	}
+
 	void handleInput(SwitchInput input);
 	virtual std::string getFormattedValue();
 	void setAndFlushInternalValue();

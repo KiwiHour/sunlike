@@ -3,6 +3,14 @@
 #include <Arduino.h>
 #include <HTTPClient.h>
 #include "tapo/tapo-core.h"
+#include "state/StateController.h"
+
+enum class BulbMode
+{
+	ColorTemperature,
+	HueSaturation,
+	None
+};
 
 // Intermediate adapter to generalise functions for the rest of the program
 // You can change the method implementation to match your bulb API of choice
@@ -13,6 +21,7 @@ class SmartBulbAdapter
 {
 private:
 	L530 *core = nullptr; // Using pointer because the initialisation of the core needs to be delayed
+	BulbMode currentMode = BulbMode::None;
 	unsigned long prevMillis;
 
 	int freshSnapshotThreshold_ms = 1000;
@@ -41,6 +50,8 @@ public:
 	// <!!!>
 	// Getters and setters should never be used
 	// Only ever through the StateController
+
+	int getMode();
 
 	// 0 for off, 1 for on
 	int getPowerState();
