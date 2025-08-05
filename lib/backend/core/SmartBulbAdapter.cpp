@@ -1,4 +1,5 @@
 #include "SmartBulbAdapter.h"
+#include "state/StateController.h"
 
 bool SmartBulbAdapter::errorCodeToBool(int errorCode)
 {
@@ -111,4 +112,9 @@ bool SmartBulbAdapter::setSaturation(int saturation)
 	currentMode = BulbMode::HueSaturation;
 	state.fetch(StateName::Bulb::Mode);
 	return errorCodeToBool(core->setSaturation(saturation));
+}
+
+bool SmartBulbAdapter::batchSet(ColorBulbAttributes attributes)
+{
+	return errorCodeToBool(core->setAttributes(attributes));
 }

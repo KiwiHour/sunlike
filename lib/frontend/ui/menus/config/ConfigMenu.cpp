@@ -10,11 +10,14 @@ void ConfigMenu::draw()
 	for (int i = 0; i < controllers.size(); i++)
 	{
 		ValuesController *controller = controllers[i];
+
 		if (i == index)
 		{
+
 			// If controller selected (aka, value being "looked at"), then make ">" bold
 			if (controller->index != -1)
 			{
+
 				int x = screen->getCursorX();
 				screen->setCursor(x + 1, screen->getCursorY());
 				screen->print("> ");

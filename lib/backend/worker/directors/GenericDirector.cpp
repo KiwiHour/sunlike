@@ -57,3 +57,12 @@ float GenericDirector::getProgress()
 
 	return (float)elapsed_s.value() / totalDuration_s;
 }
+
+void GenericDirector::onEnter()
+{
+	initialBulbState.powerState = state.get(StateName::Bulb::PowerState);
+	initialBulbState.brightness = state.get(StateName::Bulb::Brightness);
+	initialBulbState.colorTemperature = state.get(StateName::Bulb::ColorTemperature);
+	initialBulbState.hue = state.get(StateName::Bulb::Hue);
+	initialBulbState.saturation = state.get(StateName::Bulb::Saturation);
+}

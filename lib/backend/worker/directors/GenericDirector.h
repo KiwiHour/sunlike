@@ -21,6 +21,7 @@ private:
 	std::string stateTimePrefix;
 
 protected:
+	ColorBulbAttributes initialBulbState;
 	TimeHM getStartTime();
 	TimeHM getDuration();
 
@@ -33,7 +34,7 @@ public:
 	// Gets seconds since the director started (ignoring duration/end times)
 	std::optional<int> getSecondsElapsed();
 	virtual void onExit() {}
-	virtual void onEnter() {}
+	virtual void onEnter();
 	virtual std::string getName() = 0;
 
 	// Returns value from 0.0 to 1.0 based on how far through the light scene is

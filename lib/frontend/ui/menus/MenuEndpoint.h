@@ -17,6 +17,7 @@ public:
 	Args getArgs();
 	void setValuesControllers(const std::vector<ValuesController *> &_controllers)
 	{
+		internalConfigMenu.controllers.clear();
 		internalConfigMenu.addControllers(_controllers);
 		internalConfigMenu.addControllers({new ValuesController("Confirm", {})}); // Hijacking time :D
 	}
@@ -26,6 +27,7 @@ public:
 	{
 		func = _func;
 		noArgs = _noArgs;
+		internalConfigMenu.addControllers({new ValuesController("Confirm", {})}); // Hijacking time :D
 	}
 
 	void draw();
@@ -37,5 +39,5 @@ private:
 	Func func = nullptr;
 	bool funcExecuted = false;
 	int noArgs;										// Sanity check when running callFunction
-	ConfigMenu internalConfigMenu = ConfigMenu(""); // Purely to steal from handleInput and draw
+	ConfigMenu internalConfigMenu = ConfigMenu(""); // Purely to steal some methods for DRYness
 };

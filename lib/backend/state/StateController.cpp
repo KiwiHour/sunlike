@@ -1,5 +1,6 @@
 #include "StateController.h"
 #include "utils.h"
+#include <nlohmann/json.hpp>
 
 StateController g_state;
 StateController &state = g_state;
@@ -86,17 +87,39 @@ int StateController::fetchAndGet(const std::string &name)
 bool StateController::flush()
 {
 	bool success = true;
+	ColorBulbAttributes attributes;
 
 	// Flush all modified values
-	for (auto &value : values)
+	for (const auto &[name, value] : values)
 	{
-		if (value.second->isModified())
+		if (value->isModified())
 		{
-			if (!value.second->flush())
-				;
-			success = false;
+			// If it is a bulb state
+			if (bulbStates.find(name) != bulbStates.end())
+			{
+				// More bad coding!
+				int val = value->get();
+				if (name == StateName::Bulb::PowerState)
+					attributes.powerState = val;
+				else if (name == StateName::Bulb::Brightness)
+					attributes.brightness = val;
+				else if (name == StateName::Bulb::ColorTemperature)
+					attributes.colorTemperature = val;
+				else if (name == StateName::Bulb::Hue)
+					attributes.hue = val;
+				else if (name == StateName::Bulb::Saturation)
+					attributes.saturation = val;
+			}
+
+			else if (!value->flush())
+				success = false;
 		}
 	}
+
+	// If no attributes are set, it will be ignored
+	if (!bulb.batchSet(attributes))
+		success = false;
+
 	logDebug("Entire state flushed");
 
 	return success;

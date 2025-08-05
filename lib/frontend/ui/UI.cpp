@@ -100,7 +100,8 @@ Menu *UI::buildFunctionsMenu(Menu *home)
 	SubMenu *functions = new SubMenu("Functions", home);
 
 	MenuEndpoint *startDuskfall = new MenuEndpoint("Start duskfall", functions);
-	MenuEndpoint *pauseSunset = new MenuEndpoint("Pause sunset", functions);
+	MenuEndpoint *pauseSunlike = new MenuEndpoint("Pause sunlike", functions);
+	MenuEndpoint *debugFella = new MenuEndpoint("Debug!", functions);
 
 	startDuskfall->setFunction([](std::vector<int> args)
 							   { state.setAndFlush(StateName::Bulb::Brightness, args[0]);
@@ -109,7 +110,22 @@ Menu *UI::buildFunctionsMenu(Menu *home)
 		new ValuesController("Brightness", {new GenericMenuValue(1, 100, "%")}),
 	});
 
-	functions->addChildren({startDuskfall, pauseSunset});
+	debugFella->setFunction([](std::vector<int>)
+							{
+			state.set(StateName::Bulb::Brightness, 100);
+			state.set(StateName::Bulb::ColorTemperature, 2500);
+			state.flush();
+
+								delay(3000);
+
+			state.set(StateName::Bulb::Brightness, 100);
+			state.set(StateName::Bulb::Hue, 47);
+			state.set(StateName::Bulb::Saturation, 5);
+			state.flush();
+
+		return true; }, 0);
+
+	functions->addChildren({startDuskfall, pauseSunlike, debugFella});
 
 	return functions;
 }

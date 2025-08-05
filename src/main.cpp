@@ -14,6 +14,7 @@
 
 // Add sunset director logic
 // Add duskfall director logic and start duskfall function logic
+// Only allow duskfall after sunset has begun
 
 // Add pausing to the directors
 // - Need a current pause start (to know if we are currently paused) and current pause duration (for cancelling purposes) and TOTAL pause duration (a running total of the current pause(s) to allow for multiple pauses)
@@ -93,6 +94,7 @@ void buildState()
 
 	// TODO: switch states to nested enums like (State::Bulb::PowerState)
 
+	state.setBulb(bulb);
 	state.addValue(StateName::Bulb::PowerState, bind(&SmartBulbAdapter::getPowerState, &bulb), bind(&SmartBulbAdapter::setPowerState, &bulb, placeholders::_1));
 	state.addValue(StateName::Bulb::Brightness, bind(&SmartBulbAdapter::getBrightness, &bulb), bind(&SmartBulbAdapter::setBrightness, &bulb, placeholders::_1));
 	state.addValue(StateName::Bulb::ColorTemperature, bind(&SmartBulbAdapter::getColorTemperature, &bulb), bind(&SmartBulbAdapter::setColorTemperature, &bulb, placeholders::_1));

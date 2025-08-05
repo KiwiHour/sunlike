@@ -2,8 +2,8 @@
 
 #include <Arduino.h>
 #include <HTTPClient.h>
+#include <nlohmann/json.hpp>
 #include "tapo/tapo-core.h"
-#include "state/StateController.h"
 
 enum class BulbMode
 {
@@ -52,6 +52,7 @@ public:
 	// Only ever through the StateController
 
 	int getMode();
+	bool batchSet(ColorBulbAttributes attributes);
 
 	// 0 for off, 1 for on
 	int getPowerState();

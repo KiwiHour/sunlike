@@ -1,6 +1,8 @@
 #pragma once
 
+#include "core/SmartBulbAdapter.h"
 #include <unordered_map>
+#include <unordered_set>
 #include <memory>
 #include "Value.h"
 
@@ -48,12 +50,26 @@ namespace StateName
 	}
 }
 
+static const std::unordered_set<std::string> bulbStates = {
+	StateName::Bulb::PowerState,
+	StateName::Bulb::Brightness,
+	StateName::Bulb::ColorTemperature,
+	StateName::Bulb::Hue,
+	StateName::Bulb::Saturation,
+};
+
 typedef std::function<int()> Getter;
 typedef std::function<bool(int)> Setter;
 
 class StateController
 {
 public:
+	// Surely hard coding all these edge cases won't cause any problems down the line!
+	void setBulb(const SmartBulbAdapter &_bulb)
+	{
+		bulb = _bulb;
+	}
+
 	void addValue(const std::string &name, std::unique_ptr<Value> value);
 	void addValue(const std::string &name, const Getter &getter, const Setter &setter);
 	void addValue(const std::string &name, const std::pair<Getter, Setter> &getterAndSetterPair);
@@ -71,6 +87,7 @@ public:
 	bool setAndFlush(const std::string &name, int _value);
 
 private:
+	SmartBulbAdapter bulb;
 	std::unordered_map<std::string, std::unique_ptr<Value>> values;
 	Value *findValue(const std::string &name);
 };
