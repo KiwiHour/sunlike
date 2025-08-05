@@ -4,30 +4,38 @@
 #include "config/ConfigMenu.h"
 #include "tuple"
 
+// Basically just ConfigMenu, just with a frankensteined confirm button on the end
+
 class MenuEndpoint : public Menu
 {
-private:
-	using Args = std::vector<int>;
-	using Func = std::function<bool(Args)>;
-	Func func = nullptr;
 
 public:
+	using Args = std::vector<int>;
+	using Func = std::function<bool(Args)>;
 	using Menu::Menu;
 
-	void setFunction(const Func &_func)
+	Args getArgs();
+	void setValuesControllers(const std::vector<ValuesController *> &_controllers)
 	{
-		func = _func;
+		internalConfigMenu.addControllers(_controllers);
+		internalConfigMenu.addControllers({new ValuesController("Confirm", {})}); // Hijacking time :D
 	}
 
-	bool callFunction()
+	bool callFunction();
+	void setFunction(const Func &_func, int _noArgs)
 	{
-		if (func == nullptr)
-			return false;
-
-		return true; // std::apply(func, params);
+		func = _func;
+		noArgs = _noArgs;
 	}
 
 	void draw();
 	InputResponse handleInput(SwitchInput input);
-	void onIdle() {}
+	virtual void onIdle() override;
+	virtual void onEnter() override;
+
+private:
+	Func func = nullptr;
+	bool funcExecuted = false;
+	int noArgs;										// Sanity check when running callFunction
+	ConfigMenu internalConfigMenu = ConfigMenu(""); // Purely to steal from handleInput and draw
 };

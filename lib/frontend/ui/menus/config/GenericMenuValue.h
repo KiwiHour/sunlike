@@ -37,6 +37,7 @@ public:
 	}
 
 	void handleInput(SwitchInput input);
+	int getValue();
 	virtual std::string getFormattedValue();
 	void setAndFlushInternalValue();
 	void updateInternalValue();
@@ -55,7 +56,6 @@ protected:
 	int deltaRate;
 	int holdCount;
 
-	int getValue();
 	bool setValue(int value);
 	bool adjustValue(int delta);
 };

@@ -34,7 +34,7 @@ public:
 	static void setScreen(Adafruit_SSD1306 *_screen);
 
 	void addChildren(const std::vector<Menu *> &_children);
-	void clampIndex(int upper);
+	void clampIndex(int upper); // Inclusive
 
 	// Centered along the x-axis of the entire screen
 	int getCenteredXCoord(const std::string &text);

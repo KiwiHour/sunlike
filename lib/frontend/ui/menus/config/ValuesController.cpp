@@ -1,6 +1,6 @@
-#include "ConfigController.h"
+#include "ValuesController.h"
 
-void ConfigController::handleInput(SwitchInput input)
+void ValuesController::handleInput(SwitchInput input)
 {
 	if (input == SwitchInput::PUSH)
 	{
@@ -27,10 +27,13 @@ void ConfigController::handleInput(SwitchInput input)
 	}
 
 	// Handle how the value changes
-	values[index]->handleInput(input);
+	if (values.size() > 0)
+		values[index]->handleInput(input);
+	else
+		logDebug("Values controller has no values");
 }
 
-void ConfigController::clampIndex()
+void ValuesController::clampIndex()
 {
 	if (index > (int)values.size() - 1)
 		index = 0;

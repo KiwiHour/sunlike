@@ -102,9 +102,12 @@ Menu *UI::buildFunctionsMenu(Menu *home)
 	MenuEndpoint *startDuskfall = new MenuEndpoint("Start duskfall", functions);
 	MenuEndpoint *pauseSunset = new MenuEndpoint("Pause sunset", functions);
 
-	startDuskfall->setFunction([](std::vector<int>)
-							   { state.setAndFlush(StateName::Bulb::Hue, 25);
-								return true; });
+	startDuskfall->setFunction([](std::vector<int> args)
+							   { state.setAndFlush(StateName::Bulb::Brightness, args[0]);
+								return true; }, 1);
+	startDuskfall->setValuesControllers({
+		new ValuesController("Brightness", {new GenericMenuValue(1, 100, "%")}),
+	});
 
 	functions->addChildren({startDuskfall, pauseSunset});
 
@@ -116,11 +119,11 @@ Menu *UI::buildAdjustMenu(Menu *home)
 	ConfigMenu *adjust = new ConfigMenu("Adjustments", home);
 
 	adjust->addControllers({
-		new ConfigController("Power state", {new BoolMenuValue("bulb_power_state", "on", "off")}),
-		new ConfigController("Brightness", {new GenericMenuValue("bulb_brightness", 1, 100, "%")}),
-		new ConfigController("Color Temp", {new GenericMenuValue("bulb_color_temperature", 2500, 6500, "k")}),
-		new ConfigController("Hue", {new GenericMenuValue("bulb_hue", 0, 360)}),
-		new ConfigController("Saturation", {new GenericMenuValue("bulb_saturation", 1, 100, "%")}),
+		new ValuesController("Power state", {new BoolMenuValue("bulb_power_state", "on", "off")}),
+		new ValuesController("Brightness", {new GenericMenuValue("bulb_brightness", 1, 100, "%")}),
+		new ValuesController("Color Temp", {new GenericMenuValue("bulb_color_temperature", 2500, 6500, "k")}),
+		new ValuesController("Hue", {new GenericMenuValue("bulb_hue", 0, 360)}),
+		new ValuesController("Saturation", {new GenericMenuValue("bulb_saturation", 1, 100, "%")}),
 	});
 
 	return adjust;
@@ -139,25 +142,25 @@ Menu *UI::buildConfigMenu(Menu *home)
 
 	// TODO: add ConfigMenus for each of these submenus (need duration and start time, maybe stuff like ending brightness and hue? prob not)
 	sunriseConfig->addControllers({
-		new ConfigController("Start time", {new TimeMenuValue("sunrise_start_hour", TimeUnit::HOUR),
+		new ValuesController("Start time", {new TimeMenuValue("sunrise_start_hour", TimeUnit::HOUR),
 											new TimeMenuValue("sunrise_start_minute", TimeUnit::MINUTE)}),
-		new ConfigController("Duration", {new DurationMenuValue("sunrise_duration_hour", TimeUnit::HOUR, 0, 6),
+		new ValuesController("Duration", {new DurationMenuValue("sunrise_duration_hour", TimeUnit::HOUR, 0, 6),
 										  new DurationMenuValue("sunrise_duration_minute", TimeUnit::MINUTE, 0, 59)}),
-		new ConfigController("erm wts", {new DurationMenuValue(TimeUnit::MINUTE, 0, 59)}),
+		new ValuesController("erm wts", {new DurationMenuValue(TimeUnit::MINUTE, 0, 59)}),
 	});
 	sunsetConfig->addControllers({
-		new ConfigController("Start time", {new TimeMenuValue("sunset_start_hour", TimeUnit::HOUR),
+		new ValuesController("Start time", {new TimeMenuValue("sunset_start_hour", TimeUnit::HOUR),
 											new TimeMenuValue("sunset_start_minute", TimeUnit::MINUTE)}),
-		new ConfigController("Duration", {new DurationMenuValue("sunset_duration_hour", TimeUnit::HOUR, 0, 6),
+		new ValuesController("Duration", {new DurationMenuValue("sunset_duration_hour", TimeUnit::HOUR, 0, 6),
 										  new DurationMenuValue("sunset_duration_minute", TimeUnit::MINUTE, 0, 59)}),
 	});
 	duskfallConfig->addControllers({
-		new ConfigController("Duration", {new DurationMenuValue("duskfall_duration_hour", TimeUnit::HOUR, 0, 2),
+		new ValuesController("Duration", {new DurationMenuValue("duskfall_duration_hour", TimeUnit::HOUR, 0, 2),
 										  new DurationMenuValue("duskfall_duration_minute", TimeUnit::MINUTE, 0, 59)}),
 	});
 	miscConfig->addControllers({
-		new ConfigController("DST?", {new BoolMenuValue("is_daylight_saving_time", "Yes", "No")}),
-		new ConfigController("Manual override", {new BoolMenuValue("is_manual_override", "On", "Off")}),
+		new ValuesController("DST?", {new BoolMenuValue("is_daylight_saving_time", "Yes", "No")}),
+		new ValuesController("Manual override", {new BoolMenuValue("is_manual_override", "On", "Off")}),
 	});
 
 	return config;

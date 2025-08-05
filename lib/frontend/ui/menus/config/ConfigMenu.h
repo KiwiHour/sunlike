@@ -2,18 +2,17 @@
 
 #include "ui/Menu.h"
 #include "state/StateController.h"
-#include "ConfigController.h"
+#include "ValuesController.h"
 
 class ConfigMenu : public Menu
 {
-private:
-	std::vector<ConfigController *> controllers = {};
 
 public:
 	using Menu::Menu;
+	std::vector<ValuesController *> controllers = {};
 
 	virtual void draw();
-	void addControllers(const std::vector<ConfigController *> &_controllers);
+	void addControllers(const std::vector<ValuesController *> &_controllers);
 	virtual InputResponse handleInput(SwitchInput input);
 	virtual void onIdle();
 	virtual void onEnter();

@@ -9,7 +9,7 @@ void ConfigMenu::draw()
 
 	for (int i = 0; i < controllers.size(); i++)
 	{
-		ConfigController *controller = controllers[i];
+		ValuesController *controller = controllers[i];
 		if (i == index)
 		{
 			// If controller selected (aka, value being "looked at"), then make ">" bold
@@ -61,7 +61,7 @@ void ConfigMenu::draw()
 	}
 }
 
-void ConfigMenu::addControllers(const std::vector<ConfigController *> &_controllers)
+void ConfigMenu::addControllers(const std::vector<ValuesController *> &_controllers)
 {
 	controllers.insert(controllers.end(), _controllers.begin(), _controllers.end());
 }
@@ -92,7 +92,7 @@ void ConfigMenu::onIdle()
 {
 	index = 0;
 	// Unselect value on each controller
-	for (ConfigController *controller : controllers)
+	for (ValuesController *controller : controllers)
 		controller->index = -1;
 }
 

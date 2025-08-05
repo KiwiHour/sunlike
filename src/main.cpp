@@ -11,8 +11,20 @@
 #include "state/StateController.h"
 
 // TODO:
-// Add parameters to the functions
+
+// Add sunset director logic
+// Add duskfall director logic and start duskfall function logic
+
 // Add pausing to the directors
+// - Need a current pause start (to know if we are currently paused) and current pause duration (for cancelling purposes) and TOTAL pause duration (a running total of the current pause(s) to allow for multiple pauses)
+// - When the director exits, it should reset the current pause start+duration and the total pause duration, even if there wasn't a pause it should still be done because its consistent and more stable
+// - Don't allow director to change if currently paused to allow for pausing right before a director change (eg, "oh no, its about to be sunset, i need another hour before that")
+// - Adjust current time used in progress calcs by the TOTAL duration (do current elapsed - total duration)
+// - If it's currently paused (aka, if current elapsed is in the range of start time and (start time + duration)) then use the start time as the current elapsed for the progress calculations
+// - Pause should be a function worded as (Add pause time) to show its adding to any previous pauses
+// - I think adjusting wont work, do cancel only (obv only allowed it currently paused)
+// - When cancelling, set the current pause duration to (current elapsed - start elapsed), and then lower the TOTAL pause duration accordingly
+
 // Find a way to make brightness changes smoother - saturation -> hue -> brightness seem to be the priority in what causes different levels of 'brightness'
 // 		Figuring out how to link up brightness=x1, sat=y1, hue=z1 and brightness=x2, sat=y2, hue=z2 seems to be the answer
 //		Ideally I need to find where the "jumpy points" are, and just avoid them if possible, i think this happens when the brightness gets very low and the saturation is at a specific point

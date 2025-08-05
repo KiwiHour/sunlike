@@ -5,5 +5,5 @@
 #include "config/BoolMenuValue.h"
 #include "config/TimeMenuValue.h"
 #include "config/DurationMenuValue.h"
-#include "config/ConfigController.h"
+#include "config/ValuesController.h"
 #include "config/ConfigMenu.h"
